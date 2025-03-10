@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar {
+    height: 100vh; /* Ensures full height */
+    width: 300px;
+    background-color: rgb(240, 240, 240);
+    position: fixed; /* Optional: keeps it in place */
+    top: 0;
+    left: 0;
+}

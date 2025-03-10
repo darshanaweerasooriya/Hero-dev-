@@ -4,7 +4,7 @@ import myimage from '../../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-function TeacherLoging() {  // Fixed function name to match import
+function TeacherLoging() { 
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
             <div className="container leftSide d-flex flex-column w-100 md-5 " style={{ flex: 1 }}>
@@ -24,7 +24,7 @@ function TeacherLoging() {  // Fixed function name to match import
                                 placeholder="Enter your username"
                                 className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75" 
                             />
-                            <div id="emailHelp" className="form-text small">We'll never share your email with anyone else.</div>
+                            
                         </div>
                         <div className="mb-2">
                             <input 

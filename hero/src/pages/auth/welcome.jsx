@@ -18,13 +18,15 @@ function Welcome() {
 
         
         <div className="d-flex flex-column ms-4 pt-5 mt-4"> 
-        <div className="mt-5"><p>Select your role in the webssite</p></div>
+        <div className="mt-5"><p>Select your role in the webssite loginParent</p></div>
        
         </div>
         <div className="ms-4">
+        <Link to="/loginParent">
         <button type="button" className="btn w-30 mb-4 ms-4" style={{ backgroundColor: "#D27EEF", borderColor: "#D27EEF", color: "white" }}>
-            Parent Login
+            Parent Login 
         </button>
+        </Link>
        <Link to="/loginStudent">
        <button type="button" className="btn w-30 mb-4 ms-4" style={{ backgroundColor: "#D27EEF", borderColor: "#D27EEF", color: "white" }}>
             Student Login 
@@ -37,12 +39,16 @@ function Welcome() {
         </Link>
         </div>
          </div>
-        <div className="container rightSide " style={{ flex: 1 }}>
-            <h1 style={{ color: "white"}} className="mt-4 ms-4">Welcome to 
-           </h1>
-           <h2 style={{ color: "white"}} className=" ms-3"> student portal</h2>
-        <img src={myimage} className="pt-5" style={{width: 450}}></img>
-        </div>
+       
+         <div className="container rightSide d-flex flex-column" style={{ flex: 1, height: "100vh" }}>
+            <h1 style={{ color: "white", fontSize: "10vh", fontWeight: "bold" }} className="mt-2">
+               Welcome to
+            </h1>
+            <h2 style={{ color: "white", fontSize: "7vh" }} className="mt-6">
+               Student Portal
+            </h2>
+            <p style={{ color: "white"}}>Log in to access your account</p>
+            <img src={myimage} className="pt-5" style={{ width: 450 }} alt="Student Portal" /> </div>
       </div>
     );
 }
