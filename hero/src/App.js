@@ -10,12 +10,14 @@ import ParentEmail from "./pages/auth/parents/parentEmail";
 import EmailConfirm from "./pages/auth/parents/parentCofirmCode";
 import EConfirm from "./pages/auth/parents/parentForgotPassword";
 import ResetPassword from "./pages/auth/parents/parentUpdatePassword";
-import LogoBar from "./components/logobar";
-import SideBar from "./components/sidebar";
+
+import StudentHome from "./pages/student/home"
+import Layout from "./layouts/layout"
 
 function App() {
   return (
     <Router>
+     
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="loginStudent" element={<StudentLoging />} />
@@ -26,8 +28,11 @@ function App() {
         <Route path="emailConfirm" element={<EmailConfirm />} />
         <Route path="confirm" element={<EConfirm />} />
         <Route path="resetPassword" element={<ResetPassword />} />
-        <Route path="logoBar" element={<LogoBar />} />
-        <Route path="sideBar" element={<SideBar />} />
+        {/* <Route path="logoBar" element={<LogoBar />} />
+        <Route path="sideBar" element={<SideBar />} /> */}
+      <Route path ="/" element={<Layout />}>
+      <Route path="studentHome" element={<StudentHome />} />
+      </Route>
       </Routes>
     </Router>
   );
