@@ -13,6 +13,7 @@ import ResetPassword from "./pages/auth/parents/parentUpdatePassword";
 
 import StudentHome from "./pages/student/home"
 import Layout from "./layouts/layout"
+import StudentNotification from "./pages/student/notification"
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="sideBar" element={<SideBar />} /> */}
       <Route path ="/" element={<Layout />}>
       <Route path="studentHome" element={<StudentHome />} />
+      <Route path="studentNotification" element={<StudentNotification/>} />
       </Route>
       </Routes>
     </Router>
