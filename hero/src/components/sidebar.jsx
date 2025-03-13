@@ -11,18 +11,24 @@ function Sidebar() {
     const navigate = useNavigate();
     return (
         <div>
-            <div
-                style={{
-                    backgroundColor: "#9C6FE4",
-                    height: "7vh",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                }}
-                className="py-0 a"
-            >
-                <img src={heroLogo} style={{ width: 60 }} alt="Student Portal" />
-            </div>
+                <div
+            style={{
+                backgroundColor: "#9C6FE4",
+                height: "7vh",
+                position: "fixed", // Fixed position at the top
+                width: "100%", // Full width
+                top: 0, // Stick to the top
+                bottom: 1,
+                display: "flex", // Use flex for proper alignment
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1000, // Ensure it stays on top
+            }}
+            className="py-0 a mb-2"
+        >
+            <img src={heroLogo} style={{ width: 60 }} alt="Student Portal" />
+        </div>
+
             
             <div className="sidebar mt-5">
                 <ul className="sidebarList">

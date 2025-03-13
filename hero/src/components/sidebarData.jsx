@@ -15,7 +15,7 @@ export const SidebarData = [
     {
         title: "Notification",
         icon: <NotificationIcon />,
-        link: "#"
+        link: "/studentNotification"
     },
     {
         title: "Messages",
