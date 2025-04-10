@@ -20,7 +20,7 @@ export const SidebarData = [
     {
         title: "Messages",
         icon: <MessageIcon />,  // FIXED: Capitalized
-        link: "#"
+        link: "/message"
     },
     {
         title: "Groups",
@@ -35,6 +35,6 @@ export const SidebarData = [
     {
         title: "My Profile",
         icon: <ProfileIcon />,  // FIXED: Capitalized
-        link: "#"
+        link: "/studentProfile"
     }
 ];
