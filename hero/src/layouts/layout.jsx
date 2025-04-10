@@ -14,9 +14,9 @@ function Layout() {
                 padding: "20px",
                 backgroundColor: "#f4f4f4",
                 height: "100vh",
-                marginLeft: "300px", // This ensures the content doesn't go below the sidebar
+                marginLeft: "300px",
                 boxSizing: "border-box",
-                overflowY: "auto" // Ensures scrolling when content overflows
+                overflowY: "auto" 
             }}>
                 <Outlet />
             </div>

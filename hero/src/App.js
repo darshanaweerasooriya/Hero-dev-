@@ -1,19 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Welcome from './pages/auth/welcome';
 import StudentLoging from "./pages/auth/logingStudent";
-import TeacherLoging from "./pages/auth/teacher/teacherLogin"; // Ensure correct import
+import TeacherLoging from "./pages/auth/teacher/teacherLogin"; 
 import ParentLogin from "./pages/auth/parents/parentLogin";
 import ParetnSignup from "./pages/auth/parents/parentSignup";
 import ParentEmail from "./pages/auth/parents/parentEmail";
 import EmailConfirm from "./pages/auth/parents/parentCofirmCode";
 import EConfirm from "./pages/auth/parents/parentForgotPassword";
 import ResetPassword from "./pages/auth/parents/parentUpdatePassword";
+import Perfomance from "./pages/student/perfomance";
+
 
 import StudentHome from "./pages/student/home"
 import Layout from "./layouts/layout"
 import StudentNotification from "./pages/student/notification"
+import Sprofile from "./pages/student/profile"
+import Message from "./pages/student/message"
 
 function App() {
   return (
@@ -31,10 +34,14 @@ function App() {
         <Route path="resetPassword" element={<ResetPassword />} />
         {/* <Route path="logoBar" element={<LogoBar />} />
         <Route path="sideBar" element={<SideBar />} /> */}
-      <Route path ="/" element={<Layout />}>
-      <Route path="studentHome" element={<StudentHome />} />
-      <Route path="studentNotification" element={<StudentNotification/>} />
+        <Route path ="/" element={<Layout />}>
+        <Route path="studentHome" element={<StudentHome />} />
+        <Route path="studentNotification" element={<StudentNotification/>} />
+        <Route path="studentProfile" element={<Sprofile/>} />
+        <Route path="message" element={<Message />} />
       </Route>
+        <Route path="perfomance" element={<performance />} />
+       
       </Routes>
     </Router>
   );

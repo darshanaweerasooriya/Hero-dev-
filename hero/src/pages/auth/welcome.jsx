@@ -12,7 +12,7 @@ function Welcome() {
         <div className="row" style={{ display: "flex", height: "100vh" }}>
         <div className="container leftSide d-flex flex-column " style={{ flex: 1 }}>
 
-         <h1 className="mt-4 mb-2 ms-4">Welcom to HERO</h1>
+         <h1 className="mt-4 mb-2 ms-4">Welcome to HERO</h1>
         <p className="mb-4 ms-4 ">Let's discover the talents of the students in our school</p>
       
 

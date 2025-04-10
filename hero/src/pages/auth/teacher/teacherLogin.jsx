@@ -59,4 +59,4 @@ function TeacherLoging() {
     );
 }
 
-export default TeacherLoging;  // Fixed export name
+export default TeacherLoging; 
