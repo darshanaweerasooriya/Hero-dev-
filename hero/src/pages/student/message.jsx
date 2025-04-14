@@ -38,24 +38,23 @@ function Message() {
           style={styles.input}
         />
         <button onClick={handleSend} style={styles.button}>Send</button>
-      </div>
-      
-    
-
-         
-
-          
+      </div> 
         </div>
 
         {/* Right Section (Smaller - 4 columns) */}
         <div className="col-md-4 rightcontainer p-3 bg-light mt-4">
-        
-     hiiii
-        
-        </div>
-        
-      </div>
+          <h1 style={{fontSize: '20px', fontWeight: "bold"}}>Online people</h1>
+          <div class="card">
+          <div class="card-body">
+          <div class="input-group input-group-sm mb-3 ">
       
+      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Search..."/>
+    </div>
+            
+          </div>
+        </div>
+         </div> 
+      </div>
     </div>
 
     

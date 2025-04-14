@@ -6,26 +6,26 @@ import GroupIcon from '@mui/icons-material/Group';
 import EventIcon from '@mui/icons-material/Event';
 import ProfileIcon from '@mui/icons-material/Person';
 
-export const SidebarData = [
+export const TSidebarData = [
     {
         title: "Home",
         icon: <HomeIcon />,
-        link: "/studentHome"
+        link: "/teacherProfile"
     },
     {
         title: "Notification",
         icon: <NotificationIcon />,
-        link: "/studentNotification"
+        link: "#"
     },
     {
         title: "Messages",
         icon: <MessageIcon />,  // FIXED: Capitalized
-        link: "/message"
+        link: "#"
     },
     {
         title: "Groups",
         icon: <GroupIcon />,  // FIXED: Capitalized
-        link: "/studentGroup"
+        link: "#"
     },
     {
         title: "Events",
@@ -35,6 +35,6 @@ export const SidebarData = [
     {
         title: "My Profile",
         icon: <ProfileIcon />,  // FIXED: Capitalized
-        link: "/studentProfile"
+        link: "/teacherProfile"
     }
 ];
