@@ -12,11 +12,16 @@ import ResetPassword from "./pages/auth/parents/parentUpdatePassword";
 import Perfomance from "./pages/student/perfomance";
 
 
+
 import StudentHome from "./pages/student/home"
 import Layout from "./layouts/layout"
 import StudentNotification from "./pages/student/notification"
 import Sprofile from "./pages/student/profile"
 import Message from "./pages/student/message"
+import Sgroup from "./pages/student/studentsGroup"
+
+import Tlayout from "./layouts/teacherLayout"
+import Teacherprofile from "./pages/teacher/teacherProfile"
 
 function App() {
   return (
@@ -39,6 +44,12 @@ function App() {
         <Route path="studentNotification" element={<StudentNotification/>} />
         <Route path="studentProfile" element={<Sprofile/>} />
         <Route path="message" element={<Message />} />
+        <Route path="studentGroup" element={<Sgroup />} />
+        
+      </Route>
+      <Route path ="/" element={<Tlayout />}>
+      <Route path="teacherProfile" element={<Teacherprofile />} />
+
       </Route>
         <Route path="perfomance" element={<performance />} />
        
