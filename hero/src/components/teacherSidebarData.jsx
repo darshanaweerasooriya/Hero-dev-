@@ -30,7 +30,7 @@ export const TSidebarData = [
     {
         title: "Events",
         icon: <EventIcon />,  // FIXED: Capitalized
-        link: "#"
+        link: "/teacherEvent"
     },
     {
         title: "My Profile",
