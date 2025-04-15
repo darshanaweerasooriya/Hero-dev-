@@ -26,6 +26,7 @@ import Teacherprofile from "./pages/teacher/teacherProfile"
 import Teachernoti from "./pages/teacher/teacherNotification"
 import TeacherMessage from "./pages/teacher/teacherMessager"
 import TeacherGroup from "./pages/teacher/teacherGroup"
+import Teacherevent from "./pages/teacher/teacherEnvent"
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
       <Route path="teacherNotification" element={<Teachernoti />} />
       <Route  path="teacherMessage" element={<TeacherMessage />} />
       <Route path="teacherGroup" element={<TeacherGroup />} />
+      <Route path="teacherEvent" element={<Teacherevent />} />
 
       </Route>
         <Route path="perfomance" element={<performance />} />
