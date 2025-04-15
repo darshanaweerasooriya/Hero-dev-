@@ -15,17 +15,17 @@ export const TSidebarData = [
     {
         title: "Notification",
         icon: <NotificationIcon />,
-        link: "#"
+        link: "/teacherNotification"
     },
     {
         title: "Messages",
         icon: <MessageIcon />,  // FIXED: Capitalized
-        link: "#"
+        link: "/teacherMessage"
     },
     {
         title: "Groups",
         icon: <GroupIcon />,  // FIXED: Capitalized
-        link: "#"
+        link: "/teacherGroup"
     },
     {
         title: "Events",
