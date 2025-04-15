@@ -13,6 +13,7 @@ import Perfomance from "./pages/student/perfomance";
 
 
 
+
 import StudentHome from "./pages/student/home"
 import Layout from "./layouts/layout"
 import StudentNotification from "./pages/student/notification"
@@ -22,6 +23,9 @@ import Sgroup from "./pages/student/studentsGroup"
 
 import Tlayout from "./layouts/teacherLayout"
 import Teacherprofile from "./pages/teacher/teacherProfile"
+import Teachernoti from "./pages/teacher/teacherNotification"
+import TeacherMessage from "./pages/teacher/teacherMessager"
+import TeacherGroup from "./pages/teacher/teacherGroup"
 
 function App() {
   return (
@@ -49,6 +53,9 @@ function App() {
       </Route>
       <Route path ="/" element={<Tlayout />}>
       <Route path="teacherProfile" element={<Teacherprofile />} />
+      <Route path="teacherNotification" element={<Teachernoti />} />
+      <Route  path="teacherMessage" element={<TeacherMessage />} />
+      <Route path="teacherGroup" element={<TeacherGroup />} />
 
       </Route>
         <Route path="perfomance" element={<performance />} />
