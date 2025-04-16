@@ -10,7 +10,7 @@ export const TSidebarData = [
     {
         title: "Home",
         icon: <HomeIcon />,
-        link: "/teacherProfile"
+        link: "/createEvent"
     },
     {
         title: "Notification",
