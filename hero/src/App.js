@@ -10,6 +10,7 @@ import EmailConfirm from "./pages/auth/parents/parentCofirmCode";
 import EConfirm from "./pages/auth/parents/parentForgotPassword";
 import ResetPassword from "./pages/auth/parents/parentUpdatePassword";
 import Perfomance from "./pages/student/perfomance";
+import CreateEvent from "./pages/teacher/createNewEvent"
 
 
 
@@ -58,9 +59,11 @@ function App() {
       <Route  path="teacherMessage" element={<TeacherMessage />} />
       <Route path="teacherGroup" element={<TeacherGroup />} />
       <Route path="teacherEvent" element={<Teacherevent />} />
+      <Route path="createEvent" element={<CreateEvent />}/>
 
       </Route>
         <Route path="perfomance" element={<performance />} />
+        
        
       </Routes>
     </Router>
