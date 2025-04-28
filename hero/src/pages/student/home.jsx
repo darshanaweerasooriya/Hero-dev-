@@ -52,7 +52,7 @@ function Home() {
 
   return (
     <div className="container">
-      <div className="row">
+      <div className="row ">
         {/* Left Section (Wider - 8 columns) */}
         <div className="col-md-8 leftcontainer p-3 mt-4">
           <h1 className="home">Home</h1>

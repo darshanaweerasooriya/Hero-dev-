@@ -4,24 +4,40 @@ import Sidebar from "../components/sidebar";
 
 function Layout() {
     return(
-        <div>
-            {/* Sidebar stays fixed */}
-            <Sidebar />
+        <div style={{
+            display: "flex",
+            minHeight: "100vh",
+            backgroundColor: "#f4f4f4",
+          }}>
             
-            {/* Main content changes based on routes */}
+            {/* Sidebar */}
             <div style={{
-                flexGrow: 1,
-                padding: "20px",
-                backgroundColor: "#f4f4f4",
-                height: "100vh",
-                marginLeft: "300px",
-                boxSizing: "border-box",
-                overflowY: "auto" 
+              width: "250px", // fixed width for sidebar
+              flexShrink: 0, // prevent shrinking
+              backgroundColor: "#fff",
+              borderRight: "1px solid #ddd",
+              position: "fixed",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              zIndex: 1000,
             }}>
-                <Outlet />
+              <Sidebar />
             </div>
-        </div>
-    )
+      
+            {/* Main content */}
+            <div style={{
+              marginLeft: "250px", // SAME as sidebar width
+              flexGrow: 1,
+              padding: "80px 20px 20px 20px",
+              overflowY: "auto",
+            }}>
+              <Outlet />
+            </div>
+      
+          </div>
+    );
+    
 }
 
 export default Layout;
