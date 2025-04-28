@@ -21,6 +21,7 @@ import StudentNotification from "./pages/student/notification"
 import Sprofile from "./pages/student/profile"
 import Message from "./pages/student/message"
 import Sgroup from "./pages/student/studentsGroup"
+import MedalsPoints from "./pages/student/medalsPoints"
 
 import Tlayout from "./layouts/teacherLayout"
 import Teacherprofile from "./pages/teacher/teacherProfile"
@@ -51,6 +52,7 @@ function App() {
         <Route path="studentProfile" element={<Sprofile/>} />
         <Route path="message" element={<Message />} />
         <Route path="studentGroup" element={<Sgroup />} />
+        <Route path="meadlPoints" element={<MedalsPoints />}/>
         
       </Route>
       <Route path ="/" element={<Tlayout />}>

@@ -18,13 +18,18 @@ export const SidebarData = [
         link: "/studentNotification"
     },
     {
+        title: "Medals & points ",
+        icon: <GroupIcon />,
+        link: "/meadlPoints"
+    },
+    {
         title: "Messages",
-        icon: <MessageIcon />,  // FIXED: Capitalized
+        icon: <MessageIcon />,  
         link: "/message"
     },
     {
         title: "Groups",
-        icon: <GroupIcon />,  // FIXED: Capitalized
+        icon: <GroupIcon />,  
         link: "/studentGroup"
     },
     {
