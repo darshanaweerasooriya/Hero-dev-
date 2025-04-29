@@ -52,7 +52,7 @@ function CreatEvent() {
                 <input type="file" className="form-control" id="inputGroupFile02" />
               </div>
 
-              <label>Add Event Name</label>
+              <label className="label">Add Event Name</label>
               <input
                 type="text"
                 className="form-control"
@@ -63,7 +63,7 @@ function CreatEvent() {
                 onChange={handleChange}
               />
 
-              <label className="mt-4">Add Event Details</label>
+              <label className="label mt-4">Add Event Details</label>
               <textarea
                 className="form-control"
                 aria-label="Venue"
@@ -72,7 +72,7 @@ function CreatEvent() {
                 onChange={handleChange}
               ></textarea>
 
-              <label className="mt-4">Add Event Type</label>
+              <label className="label mt-4">Add Event Type</label>
               <input
                 type="text"
                 className="form-control"
@@ -83,7 +83,7 @@ function CreatEvent() {
                 onChange={handleChange}
               />
 
-              <label className="mt-4">Add Club Rules</label>
+              <label className="label mt-4">Add Club Rules</label>
 
               {rules.map((rule, index) => (
                 <div key={index} className="mb-2">
@@ -101,44 +101,14 @@ function CreatEvent() {
               <button type="button" className="btn btn-light mt-2" onClick={addNewRule}>
                 Add New Rule
               </button>
-
-              Invite Members Section
-              <div className="mt-5 p-3 bg-light rounded">
-                <h6 className="fw-bold text-primary">Invite Members</h6>
-                <div className="mb-3">
-                  <input type="text" className="form-control" placeholder="Search" />
-                </div>
-                <div>
-                  <p className="fw-bold">Suggested</p>
-                  {[1, 2, 3].map((_, index) => (
-                    <div key={index} className="d-flex align-items-center justify-content-between mb-3">
-                      <div className="d-flex align-items-center">
-                        <img
-                          src="https://via.placeholder.com/40"
-                          alt="profile"
-                          className="rounded-circle me-2"
-                          style={{ width: "40px", height: "40px" }}
-                        />
-                        <span><strong>Diduli</strong></span>
-                      </div>
-                      <button type="button" className="btn btn-primary">Invite</button>
-                    </div>
-                  ))}
-                </div>
-                <div className="text-center">
-                 
-                </div>
-                <button type="button" className="btn btn-purple mt-3" style={{ backgroundColor: '#8000b3', color: '#fff' }}>
+              <div>
+              <button type="button" className="btn btn-purple mt-3" style={{ backgroundColor: '#8000b3', color: '#fff' }}>
                     Create Event
                   </button>
               </div>
-
-              {/* Submit Button
-              <div className="mt-4">
-                <button type="submit" className="btn btn-primary">
-                  Submit Event
-                </button>
-              </div> */}
+              
+             
+             
             </form>
           </div>
         </div>

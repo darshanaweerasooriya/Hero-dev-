@@ -12,10 +12,11 @@ function Tgruop() {
             
             {/* Add Group Button - Only in Left Section */}
             <div className="mb-3 text-end">
-              <button className="btn " style={{background: "#7E0AA1", color: "white"}}>
-                Add Group
-              </button>
-            </div>
+            <a href="http://localhost:3000/createGroup" className="btn" style={{ background: "#7E0AA1", color: "white" }}>
+              Add New Group
+            </a>
+          </div>
+
   
             {/* Card Content */}
             <div className="card">

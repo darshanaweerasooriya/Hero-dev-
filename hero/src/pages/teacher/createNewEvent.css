@@ -21,4 +21,7 @@
   select:focus {
     border-color: #007bff;
   }
-  
+
+  .label{
+    color: #8000b3;
+  }
