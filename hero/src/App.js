@@ -22,6 +22,8 @@ import Sprofile from "./pages/student/profile"
 import Message from "./pages/student/message"
 import Sgroup from "./pages/student/studentsGroup"
 import MedalsPoints from "./pages/student/medalsPoints"
+import StudentsEvent from "./pages/student/events"
+import SgroupDetetails from "./pages/student/sGroupDetails"
 
 import Tlayout from "./layouts/teacherLayout"
 import Teacherprofile from "./pages/teacher/teacherProfile"
@@ -53,6 +55,8 @@ function App() {
         <Route path="message" element={<Message />} />
         <Route path="studentGroup" element={<Sgroup />} />
         <Route path="meadlPoints" element={<MedalsPoints />}/>
+        <Route path="studentsEvent" element={<StudentsEvent />}/>
+        <Route path="stduentGDetails" element={<SgroupDetetails/>} />
         
       </Route>
       <Route path ="/" element={<Tlayout />}>
