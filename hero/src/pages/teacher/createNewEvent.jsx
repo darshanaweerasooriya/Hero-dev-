@@ -4,154 +4,179 @@ import "./createNewEvent.css";
 
 
 function CreatEvent() {
-    const [eventData, setEventData] = useState({
-        name: '',
-        venue: '',
-        time: ''
+  const [eventData, setEventData] = useState({
+    name: '',
+    venue: '',
+    time: ''
+  });
+
+  const [rules, setRules] = useState([""]);
+
+  const handleChange = (e) => {
+    setEventData({
+      ...eventData,
+      [e.target.name]: e.target.value
     });
+  };
 
-    const handleChange = (e) => {
-        setEventData({
-            ...eventData,
-            [e.target.name]: e.target.value
-        });
-    };
+  const handleRuleChange = (index, value) => {
+    const updatedRules = [...rules];
+    updatedRules[index] = value;
+    setRules(updatedRules);
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            // Dummy API URL (you can replace this with your real backend endpoint)
-            const response = await axios.post("https://jsonplaceholder.typicode.com/posts", eventData);
-            console.log("Event Created:", response.data);
-            alert("Event submitted successfully!");
-        } catch (error) {
-            console.error("Error submitting event:", error);
-            alert("Failed to submit event.");
-        }
-    };
+  const addNewRule = () => {
+    setRules([...rules, ""]);
+  };
 
-    return(
-        <div className=" p-3 mt-4">
-            <h2> Create Event</h2>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = { ...eventData, rules };
+      const response = await axios.post("https://jsonplaceholder.typicode.com/posts", payload);
+      console.log("Event Created:", response.data);
+      alert("Event submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting event:", error);
+      alert("Failed to submit event.");
+    }
+  };
+    return (
+      <div className="container">
+      <div className="row">
+        {/* Left Section */}
+        <div className="col-md-8 leftcontainer p-3 mt-4 h-100">
+          <div className="d-flex align-items-center justify-content-between w-100">
+            <form style={{ width: "100%" }} onSubmit={handleSubmit}>
+              <div className="input-group mb-3" style={{ width: "100%" }}>
+                <input type="file" className="form-control" id="inputGroupFile02" />
+              </div>
 
-            <form onSubmit={handleSubmit}>
+              <label>Add Event Name</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Club Name"
+                aria-label="Club Name"
+                name="name"
+                value={eventData.name}
+                onChange={handleChange}
+              />
+
+              <label className="mt-4">Add Event Details</label>
+              <textarea
+                className="form-control"
+                aria-label="Venue"
+                name="addEventDetails"
+                value={eventData.venue}
+                onChange={handleChange}
+              ></textarea>
+
+              <label className="mt-4">Add Event Type</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Add Event Type"
+                aria-label="etpy"
+                name="eventType"
+                value={eventData.time}
+                onChange={handleChange}
+              />
+
+              <label className="mt-4">Add Club Rules</label>
+
+              {rules.map((rule, index) => (
+                <div key={index} className="mb-2">
+                  <span>Rule {index + 1}</span>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter rule"
+                    value={rule}
+                    onChange={(e) => handleRuleChange(index, e.target.value)}
+                  />
+                </div>
+              ))}
+
+              <button type="button" className="btn btn-light mt-2" onClick={addNewRule}>
+                Add New Rule
+              </button>
+
+              Invite Members Section
+              <div className="mt-5 p-3 bg-light rounded">
+                <h6 className="fw-bold text-primary">Invite Members</h6>
+                <div className="mb-3">
+                  <input type="text" className="form-control" placeholder="Search" />
+                </div>
                 <div>
-                    <div className="row mt-2">
-
-                    <label>Event Name:</label>
-               <div className="input-group flex-nowrap w-75 mt-1">
-               
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Event Name "
-                    aria-label="Username"
-                    aria-describedby="addon-wrapping"
-                    style={{ width: "150px" }} // adjust the px as needed
-                />
-                </div>
+                  <p className="fw-bold">Suggested</p>
+                  {[1, 2, 3].map((_, index) => (
+                    <div key={index} className="d-flex align-items-center justify-content-between mb-3">
+                      <div className="d-flex align-items-center">
+                        <img
+                          src="https://via.placeholder.com/40"
+                          alt="profile"
+                          className="rounded-circle me-2"
+                          style={{ width: "40px", height: "40px" }}
+                        />
+                        <span><strong>Diduli</strong></span>
+                      </div>
+                      <button type="button" className="btn btn-primary">Invite</button>
                     </div>
-
-                <div className="row mt-2">
-
-                    <label>Event Description:</label>
-                    <div className="input-group flex-nowrap w-75 mt-1">
-
-                    <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Description"
-                    aria-label="Username"
-                    aria-describedby="addon-wrapping"
-                    style={{ width: "150px" }} // adjust the px as needed
-                    />
+                  ))}
                 </div>
-
-
+                <div className="text-center">
+                 
                 </div>
+                <button type="button" className="btn btn-purple mt-3" style={{ backgroundColor: '#8000b3', color: '#fff' }}>
+                    Create Event
+                  </button>
+              </div>
 
-                <div className="row mt-2">
-
-                    <label>Event Type / Category:</label>
-                <div className="input-group flex-nowrap w-25 mt-1">
-
-                <select
-                    name="type"
-                    value={eventData.type}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Event Type</option>
-                    <option value="conference">Conference</option>
-                    <option value="workshop">Workshop</option>
-                    <option value="seminar">Seminar</option>
-                    <option value="party">Party</option>
-                </select>
-                </div>
-
-                <div className="input-group flex-nowrap w-25 mt-1 ms-2">
-
-                <select
-                    name="type"
-                    value={eventData.type}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Class</option>
-                    <option value="conference">Conference</option>
-                    <option value="workshop">Workshop</option>
-                    <option value="seminar">Seminar</option>
-                    <option value="party">Party</option>
-                </select>
-                </div>
-
-                </div>
-
-                <div className="input-group flex-nowrap w-25 mt-3">
-               
-                <select
-                    name="type"
-                    value={eventData.type}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Subjects</option>
-                    <option value="conference">Conference</option>
-                    <option value="workshop">Workshop</option>
-                    <option value="seminar">Seminar</option>
-                    <option value="party">Party</option>
-                </select>
-                </div>
-
-                <div className="row1 mt-3 ">
-               
-               <select
-                   name="type"
-                   value={eventData.type}
-                   onChange={handleChange}
-                   required
-               >
-                   <option value="">Members</option>
-                   <option value="conference">Conference</option>
-                   <option value="workshop">Workshop</option>
-                   <option value="seminar">Seminar</option>
-                   <option value="party">Party</option>
-               </select>
-               </div>
-
-               <div>
-               <button type="submit" className="btn mt-3 w-40" style={{ background: "#7E0AA1", color: "white"}}>
-                Submit
+              {/* Submit Button
+              <div className="mt-4">
+                <button type="submit" className="btn btn-primary">
+                  Submit Event
                 </button>
-               </div>
-               
-               </div>
-
+              </div> */}
             </form>
-
+          </div>
         </div>
 
-    );
+        {/* Right Section */}
+        <div className="col-md-4 rightcontainer p-3 bg-light mt-4">
+          <div className="input-group input-group-sm mb-3"></div>
+          <label className="filterName">Filter</label>
+          <div className="mt-3 ms-2">
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+              <label className="form-check-label" htmlFor="flexCheckDefault">
+                Checkbox
+              </label>
+            </div>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
+              <label className="form-check-label" htmlFor="flexCheckChecked">
+                Checkbox
+              </label>
+            </div>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
+              <label className="form-check-label" htmlFor="flexCheckChecked">
+                Checkbox
+              </label>
+            </div>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
+              <label className="form-check-label" htmlFor="flexCheckChecked">
+                Checkbox
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default CreatEvent;

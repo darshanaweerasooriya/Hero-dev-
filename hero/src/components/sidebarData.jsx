@@ -35,7 +35,7 @@ export const SidebarData = [
     {
         title: "Events",
         icon: <EventIcon />,  // FIXED: Capitalized
-        link: "#"
+        link: "/studentsEvent"
     },
     {
         title: "My Profile",
