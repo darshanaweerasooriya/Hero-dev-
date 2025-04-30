@@ -22,7 +22,7 @@ export const PsidebarData = [
     {
         title: "Messages",
         icon: <MessageIcon />,  // FIXED: Capitalized
-        link: "/teacherMessage"
+        link: "/pMessage"
     },
     {
         title: "Event and Clubs",

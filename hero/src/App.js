@@ -43,6 +43,7 @@ import PfR from "./pages/parents/parentFrequrst"
 import Friends from "./pages/parents/parentFrequrst"
 import Pfreinds from "./pages/parents/friend"
 import PRequest from "./pages/parents/friendRequest"
+import PMessage from "./pages/parents/pMessage"
 
 function App() {
   return (
@@ -88,6 +89,8 @@ function App() {
         <Route path="pEventsClubs" element={<PclubsEvent />}/>
         <Route path="pOverview" element={<Poverview />}/>
         <Route path="pFriendRequest" element={<PfR />} />
+        <Route path="pMessage" element={<PMessage />}/>
+
 
       </Route>
       {/* <Route>
