@@ -16,6 +16,7 @@ import CreateGroup from "./pages/teacher/createGroup"
 
 
 
+
 import StudentHome from "./pages/student/home"
 import Layout from "./layouts/layout"
 import StudentNotification from "./pages/student/notification"
@@ -32,6 +33,16 @@ import Teachernoti from "./pages/teacher/teacherNotification"
 import TeacherMessage from "./pages/teacher/teacherMessager"
 import TeacherGroup from "./pages/teacher/teacherGroup"
 import Teacherevent from "./pages/teacher/teacherEnvent"
+
+
+import Playout from "./layouts/parentLayout"
+import PclubsEvent from "./pages/parents/parentEventClubs"
+import Poverview from "./pages/parents/parentOverview"
+import PfR from "./pages/parents/parentFrequrst"
+
+import Friends from "./pages/parents/parentFrequrst"
+import Pfreinds from "./pages/parents/friend"
+import PRequest from "./pages/parents/friendRequest"
 
 function App() {
   return (
@@ -71,6 +82,21 @@ function App() {
 
       </Route>
         <Route path="perfomance" element={<performance />} />
+
+        <Route path ="/" element={<Playout />}>
+        
+        <Route path="pEventsClubs" element={<PclubsEvent />}/>
+        <Route path="pOverview" element={<Poverview />}/>
+        <Route path="pFriendRequest" element={<PfR />} />
+
+      </Route>
+      {/* <Route>
+      <Route path="/" element={<Friends />}/>
+      <Route path="pFrend" element={<Pfreinds/>}/>
+      </Route> */}
+
+        <Route path="/pFrend" element={<Pfreinds />} />
+        <Route path="/pReuest" element={<PRequest />}/>
         
        
       </Routes>
