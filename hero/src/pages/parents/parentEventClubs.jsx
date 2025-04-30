@@ -1,48 +1,48 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./createNewEvent.css";
+import "./parentEventClubs.css";
+import Pdetails from "../../components/pdetails"
 
-
-function CreatEvent() {
+function PeventClubs() {
   const [eventData, setEventData] = useState({
-    name: '',
-    venue: '',
-    time: ''
+    name: "",
+    venue: "",
+    time: "",
+    eventType: "",
   });
 
   const [rules, setRules] = useState([""]);
 
   const handleChange = (e) => {
-    setEventData({
-      ...eventData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setEventData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleRuleChange = (index, value) => {
-    const updatedRules = [...rules];
-    updatedRules[index] = value;
-    setRules(updatedRules);
+    const newRules = [...rules];
+    newRules[index] = value;
+    setRules(newRules);
   };
 
   const addNewRule = () => {
     setRules([...rules, ""]);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const payload = { ...eventData, rules };
-      const response = await axios.post("https://jsonplaceholder.typicode.com/posts", payload);
-      console.log("Event Created:", response.data);
-      alert("Event submitted successfully!");
-    } catch (error) {
-      console.error("Error submitting event:", error);
-      alert("Failed to submit event.");
-    }
+    console.log("Submitting:", eventData, rules);
+    // You can send this data to your server using axios if needed
+    // Example:
+    // axios.post('/api/events', { eventData, rules })
   };
-    return (
-      <div className="container">
+
+  return (
+    <div className="container">
+       
+      <Pdetails />
       <div className="row">
         {/* Left Section */}
         <div className="col-md-8 leftcontainer p-3 mt-4 h-100">
@@ -67,7 +67,7 @@ function CreatEvent() {
               <textarea
                 className="form-control"
                 aria-label="Venue"
-                name="addEventDetails"
+                name="venue"
                 value={eventData.venue}
                 onChange={handleChange}
               ></textarea>
@@ -78,7 +78,7 @@ function CreatEvent() {
                 className="form-control"
                 placeholder="Add Event Type"
                 aria-label="etpy"
-                name="eventType"
+                name="time"
                 value={eventData.time}
                 onChange={handleChange}
               />
@@ -101,14 +101,36 @@ function CreatEvent() {
               <button type="button" className="btn btn-light mt-2" onClick={addNewRule}>
                 Add New Rule
               </button>
-              <div>
-              <button type="button" className="btn btn-purple mt-3" style={{ backgroundColor: '#8000b3', color: '#fff' }}>
-                    Create Event
-                  </button>
+
+              <label className="label mt-4">Invite Members Section</label>
+
+              <div className="p-3 bg-light rounded">
+                <h6 className="fw-bold text-primary">Invite Members</h6>
+                <div className="mb-3">
+                  <input type="text" className="form-control" placeholder="Search" />
+                </div>
+                <div>
+                  <p className="fw-bold">Suggested</p>
+                  {[1, 2, 3].map((_, index) => (
+                    <div key={index} className="d-flex align-items-center justify-content-between mb-3">
+                      <div className="d-flex align-items-center">
+                        <img
+                          src="https://via.placeholder.com/40"
+                          alt="profile"
+                          className="rounded-circle me-2"
+                          style={{ width: "40px", height: "40px" }}
+                        />
+                        <span><strong>Diduli</strong></span>
+                      </div>
+                      <button type="button" className="btn btn-primary">Invite</button>
+                    </div>
+                  ))}
+                </div>
+                <div className="text-center"></div>
+                <button type="submit" className="btn btn-purple mt-3" style={{ backgroundColor: '#8000b3', color: '#fff' }}>
+                  Create Event
+                </button>
               </div>
-              
-             
-             
             </form>
           </div>
         </div>
@@ -118,30 +140,14 @@ function CreatEvent() {
           <div className="input-group input-group-sm mb-3"></div>
           <label className="filterName">Filter</label>
           <div className="mt-3 ms-2">
-            <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                Checkbox
-              </label>
-            </div>
-            <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
-              <label className="form-check-label" htmlFor="flexCheckChecked">
-                Checkbox
-              </label>
-            </div>
-            <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
-              <label className="form-check-label" htmlFor="flexCheckChecked">
-                Checkbox
-              </label>
-            </div>
-            <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
-              <label className="form-check-label" htmlFor="flexCheckChecked">
-                Checkbox
-              </label>
-            </div>
+            {[1, 2, 3, 4].map((_, i) => (
+              <div className="form-check" key={i}>
+                <input className="form-check-input" type="checkbox" value="" id={`flexCheck${i}`} />
+                <label className="form-check-label" htmlFor={`flexCheck${i}`}>
+                  Checkbox
+                </label>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -149,4 +155,4 @@ function CreatEvent() {
   );
 }
 
-export default CreatEvent;
+export default PeventClubs;
