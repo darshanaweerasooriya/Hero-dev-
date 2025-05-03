@@ -1,93 +1,98 @@
 import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./teacherNotification.css";
-import myimage from "../../assests/images/welcome.png";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import FilterIcon from "@mui/icons-material/Filter1";
-import profile from "../../assests/images/profile.jpg";
-import testimage from "../../assests/images/classroomtest.jpg";
 import io from "socket.io-client";
 
-const socket = io("");
+// Initialize socket connection
+const socket = io("http://localhost:5000"); // replace with your backend URL if needed
 
 function Tnotification() {
-    // State to hold notifications
-      const [notifications, setNotifications] = useState([]);
-    
-    
-      useEffect(() => {
-        socket.on("newNotification", (notification)=> {
-          setNotifications((prevNotification) => [notification, ...prevNotification]);
-    
-        });
-    
-        return () => {
-          socket.off("newNotification");
-        };
-      }, []);
-    
-      return (
-        <div className="container">
-          <div className="row">
-            {/* Left Section (Wider - 8 columns) */}
-            <div className="col-md-8 leftcontainer p-3 mt-4 h-100">
-              <div className="d-flex align-items-center justify-content-between w-100">
-                <h1 className="notification">Teacher Notification</h1>
+  const [notifications, setNotifications] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState({
+    assignment: false,
+    announcement: false,
+    message: false,
+    general: false,
+  });
+
+  useEffect(() => {
+    // Listen to socket for new notifications
+    socket.on("newNotification", (notification) => {
+      setNotifications((prev) => [notification, ...prev]);
+    });
+
+    return () => {
+      socket.off("newNotification");
+    };
+  }, []);
+
+  // Handle checkbox changes
+  const handleFilterChange = (type) => {
+    setSelectedTypes((prev) => ({
+      ...prev,
+      [type]: !prev[type],
+    }));
+  };
+
+  // Filter logic
+  const filteredNotifications = notifications.filter((n) =>
+    Object.values(selectedTypes).some(Boolean)
+      ? selectedTypes[n.type]
+      : true
+  );
+
+  return (
+    <div className="container">
+      <div className="row">
+        {/* LEFT SIDE */}
+        <div className="col-md-8 leftcontainer p-3 mt-4 h-100">
+          <div className="d-flex align-items-center justify-content-between w-100">
+            <h1 className="notification">Teacher Notification</h1>
+            <input
+              type="text"
+              className="form-control w-50"
+              placeholder="Search..."
+            />
+          </div>
+          <hr />
+
+          {filteredNotifications.length === 0 ? (
+            <p>No New Notification</p>
+          ) : (
+            filteredNotifications.map((notification, index) => (
+              <div className="card mb-2" key={index}>
+                <div className="card-body">
+                  <strong>{notification.type.toUpperCase()}</strong>:{" "}
+                  {notification.message}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* RIGHT SIDE - FILTERS */}
+        <div className="col-md-4 rightcontainer p-3 bg-light mt-4">
+          <label className="filterName fs-5 mb-3">Filter by Type</label>
+          <div className="ms-2">
+            {["assignment", "announcement", "message", "general"].map((type) => (
+              <div className="form-check" key={type}>
                 <input
-                  type="text"
-                  className="form-control w-50"
-                  aria-label="Sizing example input"
-                  aria-describedby="inputGroup-sizing-sm"
-                  placeholder="Search..."
+                  className="form-check-input"
+                  type="checkbox"
+                  id={`check-${type}`}
+                  checked={selectedTypes[type]}
+                  onChange={() => handleFilterChange(type)}
                 />
+                <label className="form-check-label" htmlFor={`check-${type}`}>
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </label>
               </div>
-              <hr />
-    
-             {notifications.length === 0 ? (
-              <p>No New Notification</p>
-             ): (
-              notifications.map((notification, index) =>(
-                <div className="card mb-2" key={index}>
-                <div className="card-body">{notification.message}</div>
-              </div>
-              ))
-             )}
-            </div>
-    
-            {/* Right Section (Smaller - 4 columns) */}
-            <div className="col-md-4 rightcontainer p-3 bg-light mt-4">
-              <div className="input-group input-group-sm mb-3"></div>
-              <label className="filterName">Filter</label>
-              <div className="mt-3 ms-2 ">
-                <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-              <label class="form-check-label" for="flexCheckDefault">
-                Checkbox
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
-              <label class="form-check-label" for="flexCheckChecked">
-                Checkbox
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
-              <label class="form-check-label" for="flexCheckChecked">
-                Checkbox
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
-              <label class="form-check-label" for="flexCheckChecked">
-                Checkbox
-              </label>
-            </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-      );
+      </div>
+    </div>
+  );
 }
 
 export default Tnotification;

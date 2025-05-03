@@ -57,7 +57,7 @@ function Tevent() {
               </div>
       
               {/* Right Section (Smaller - 4 columns) */}
-              <div className="col-md-4 rightcontainer p-3 bg-light mt-4">hii</div>
+              <div className="col-md-4 rightcontainer p-3 bg-light mt-4"></div>
             </div>
           </div>
             

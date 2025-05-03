@@ -33,6 +33,7 @@ import Teachernoti from "./pages/teacher/teacherNotification"
 import TeacherMessage from "./pages/teacher/teacherMessager"
 import TeacherGroup from "./pages/teacher/teacherGroup"
 import Teacherevent from "./pages/teacher/teacherEnvent"
+import THome from "./pages/teacher/teacherHome"
 
 
 import Playout from "./layouts/parentLayout"
@@ -80,6 +81,7 @@ function App() {
       <Route path="teacherEvent" element={<Teacherevent />} />
       <Route path="createEvent" element={<CreateEvent />}/>
       <Route path="createGroup" element={<CreateGroup />}/> 
+      <Route path='tHome' element={<THome />} />
 
       </Route>
         <Route path="perfomance" element={<performance />} />
