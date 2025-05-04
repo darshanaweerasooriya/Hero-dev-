@@ -56,10 +56,10 @@ function Plogin() {
 
             <div className="container rightSide d-flex flex-column" style={{ flex: 1, height: "100vh" }}>
                 <h1 style={{ color: "white", fontSize: "10vh", fontWeight: "bold" }} className="mt-2">
-                    Welcome to
+                    Welcome back to
                 </h1>
                 <h2 style={{ color: "white", fontSize: "7vh" }} className="mt-6">
-                    Student Portal
+                    Hero
                 </h2>
                 <p style={{ color: "white"}}>Log in to access your account</p>
                 <img src={myimage} className="pt-5" style={{ width: 450 }} alt="Student Portal" />
