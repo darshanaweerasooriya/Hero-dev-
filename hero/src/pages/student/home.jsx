@@ -1,3 +1,4 @@
+// Home.js
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./home.css";
@@ -17,12 +18,14 @@ function Home() {
       showCommentBox: false,
       showShareBox: false,
       comments: [],
+      category: "Education",
     },
   ]);
 
   const [postContent, setPostContent] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
   const [newComment, setNewComment] = useState({});
+  const [category, setCategory] = useState("Education");
 
   const handleContentChange = (e) => {
     setPostContent(e.currentTarget.innerHTML);
@@ -53,6 +56,7 @@ function Home() {
         showCommentBox: false,
         showShareBox: false,
         comments: [],
+        category: category,
       };
       setPosts([newPost, ...posts]);
       setPostContent("");
@@ -92,96 +96,93 @@ function Home() {
   return (
     <div className="container">
       <div className="row">
-        {/* Left Section */}
         <div className="col-md-8 leftcontainer p-3 mt-4">
           <h1 className="home">Home</h1>
 
-          {/* Stories */}
           <div className="stories-container d-flex">
             {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="card ms-2 pt-2"
-                style={{ width: "7rem", height: "9rem" }}
-              >
+              <div key={i} className="card ms-2 pt-2" style={{ width: "7rem", height: "9rem" }}>
                 <img src={myimage} className="card-img-top" alt="..." />
               </div>
             ))}
           </div>
 
-          {/* Post Editor */}
-          <div className="post mt-4">
-            <div className="mb-3 ms-3">
-              <label htmlFor="postEditor" className="form-label">
-                Share something...
-              </label>
-              <div
-                id="postEditor"
-                className="form-control"
-                contentEditable="true"
-                onInput={handleContentChange}
-                style={{
-                  minHeight: "100px",
-                  border: "1px solid #ccc",
-                  padding: "8px",
-                  width: "95%",
-                }}
-              ></div>
+          <div className="card p-4 shadow-sm mt-4">
+            <label htmlFor="postEditor" className="form-label fw-semibold">Share something...</label>
+            <div
+              id="postEditor"
+              className="form-control mb-2"
+              contentEditable="true"
+              onInput={handleContentChange}
+              style={{ minHeight: "100px" }}
+            ></div>
 
-              <div className="d-flex justify-content-between align-items-center mt-2 mb-2">
-                <label
-                  htmlFor="imageUpload"
-                  className="btn btn-outline-secondary btn-sm"
-                >
-                  <AddAPhotoIcon />
-                </label>
-                <input
-                  type="file"
-                  id="imageUpload"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: "none" }}
-                />
+            <div className="mt-2">
+              <label className="form-label fw-semibold me-2">Category:</label>
+              <div className="d-flex gap-2 flex-wrap category-btns">
                 <button
                   type="button"
-                  className="btn btn-sm me-4"
-                  style={{ backgroundColor: "#7E0AA1", color: "white" }}
-                  onClick={handlePost}
+                  className={`btn ${category === "Education" ? "btn-primary" : "btn-outline-primary"}`}
+                  onClick={() => setCategory("Education")}
                 >
-                  Post
+                  🎓 Education
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${category === "Non-Education" ? "btn-success" : "btn-outline-success"}`}
+                  onClick={() => setCategory("Non-Education")}
+                >
+                  🧹 Non-Education
                 </button>
               </div>
             </div>
+
+            <div className="d-flex justify-content-between align-items-center mt-3">
+              <label htmlFor="imageUpload" className="btn btn-outline-secondary btn-sm upload-btn">
+                <AddAPhotoIcon />
+              </label>
+              <input
+                type="file"
+                id="imageUpload"
+                multiple
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ display: "none" }}
+              />
+              <button
+                type="button"
+                className="btn btn-sm"
+                style={{ backgroundColor: "#7E0AA1", color: "white" }}
+                onClick={handlePost}
+              >
+                Post
+              </button>
+            </div>
           </div>
 
-          {/* Filter */}
-          <div className="mt-2 d-flex justify-content-between align-items-center mb-2">
+          <div className="mt-4 d-flex justify-content-between align-items-center mb-2">
             <p style={{ color: "#787878" }}>All</p>
             <FilterIcon />
           </div>
           <hr />
 
-          {/* Posts */}
           {posts.map((post, index) => (
             <div key={index} className="card mb-3">
               <div className="card-body">
                 <div className="d-flex align-items-center">
                   <img
                     src={profile}
-                    className="profilep me-2"
+                    className="me-2"
                     alt="profile"
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                    }}
+                    style={{ width: "40px", height: "40px", borderRadius: "50%" }}
                   />
                   <div>
-                    <p className="pname mb-0">{post.username}</p>
+                    <p className="pname mb-0 fw-bold">{post.username}</p>
                     <small className="text-muted">{post.date}</small>
                   </div>
                 </div>
+
+                <span className={`badge ${post.category === "Education" ? "bg-primary" : "bg-success"} mt-2`}>{post.category}</span>
 
                 <div className="mt-2" dangerouslySetInnerHTML={{ __html: post.content }} />
                 {post.image && (
@@ -195,24 +196,11 @@ function Home() {
 
                 <hr />
                 <div className="d-flex justify-content-around text-muted">
-                  <button className="btn btn-light btn-sm w-100 me-1">
-                    👍 Like
-                  </button>
-                  <button
-                    className="btn btn-light btn-sm w-100 me-1"
-                    onClick={() => toggleCommentBox(index)}
-                  >
-                    💬 Comment
-                  </button>
-                  <button
-                    className="btn btn-light btn-sm w-100"
-                    onClick={() => toggleShareBox(index)}
-                  >
-                    ↗️ Share
-                  </button>
+                  <button className="btn btn-light btn-sm w-100 me-1">👍 Like</button>
+                  <button className="btn btn-light btn-sm w-100 me-1" onClick={() => toggleCommentBox(index)}>💬 Comment</button>
+                  <button className="btn btn-light btn-sm w-100" onClick={() => toggleShareBox(index)}>↗️ Share</button>
                 </div>
 
-                {/* Comment Box */}
                 {post.showCommentBox && (
                   <div className="mt-3">
                     <input
@@ -222,31 +210,19 @@ function Home() {
                       value={newComment[index] || ""}
                       onChange={(e) => handleCommentChange(index, e.target.value)}
                     />
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => handleCommentSubmit(index)}
-                    >
-                      Post Comment
-                    </button>
+                    <button className="btn btn-primary btn-sm" onClick={() => handleCommentSubmit(index)}>Post Comment</button>
                     <ul className="list-unstyled mt-2">
                       {post.comments.map((c, i) => (
-                        <li key={i}>
-                          <strong>{c.user}: </strong> {c.text}
-                        </li>
+                        <li key={i}><strong>{c.user}: </strong> {c.text}</li>
                       ))}
                     </ul>
                   </div>
                 )}
 
-                {/* Share Box */}
                 {post.showShareBox && (
                   <div className="mt-3 border p-2 bg-light rounded">
                     <p className="mb-1 fw-bold">Share this post</p>
-                    <input
-                      type="text"
-                      className="form-control form-control-sm mb-2"
-                      placeholder="Say something about this..."
-                    />
+                    <input type="text" className="form-control form-control-sm mb-2" placeholder="Say something about this..." />
                     <button className="btn btn-success btn-sm">Share Now</button>
                   </div>
                 )}
@@ -255,15 +231,9 @@ function Home() {
           ))}
         </div>
 
-        {/* Right Section */}
         <div className="col-md-4 rightcontainer p-3 bg-light mt-4">
           <div className="input-group input-group-sm mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search..."
-              aria-label="Search input"
-            />
+            <input type="text" className="form-control" placeholder="Search..." />
           </div>
 
           <div className="mt-2 d-flex justify-content-between align-items-center mb-2">
