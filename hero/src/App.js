@@ -46,6 +46,14 @@ import Pfreinds from "./pages/parents/friend"
 import PRequest from "./pages/parents/friendRequest"
 import PMessage from "./pages/parents/pMessage"
 
+import AdminLayout from "./layouts/adminLayout"
+import AdminLog from './pages/admin/loging';
+import AdminDashboard from './pages/admin/dashboard';
+import AddTeachers from './pages/admin/addTeacher';
+import AddStudent from './pages/admin/adminStudent';
+import AddingTeacher from './pages/admin/admintTeachers';
+import AddingStudent from './pages/admin/addStudent';
+
 function App() {
   return (
     <Router>
@@ -95,6 +103,16 @@ function App() {
 
 
       </Route>
+
+      
+        <Route path="/" element={<AdminLayout />}> 
+        <Route path='/adminDahsboard' element={<AdminDashboard/>}/>
+        <Route path='/addTeacher' element={<AddTeachers />}/>
+        <Route path='/addStudent' element={<AddStudent/>}/>
+        <Route path='/addingTeachers' element={<AddingTeacher />}/>
+        <Route path='/addingStudnet' element={<AddingStudent/>}/>
+       
+      </Route>
       {/* <Route>
       <Route path="/" element={<Friends />}/>
       <Route path="pFrend" element={<Pfreinds/>}/>
@@ -102,6 +120,7 @@ function App() {
 
         <Route path="/pFrend" element={<Pfreinds />} />
         <Route path="/pReuest" element={<PRequest />}/>
+        <Route path="adminLog" element={<AdminLog />}/>
         
        
       </Routes>
