@@ -7,6 +7,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import FilterIcon from "@mui/icons-material/Filter1";
 import profile from "../../assests/images/profile.jpg";
 import testimage from "../../assests/images/classroomtest.jpg";
+import studentService from "../../services/student.service";
 
 function Home() {
   const [posts, setPosts] = useState([
@@ -46,23 +47,43 @@ function Home() {
     setPostContent(editor.innerHTML);
   };
 
-  const handlePost = () => {
-    if (postContent.trim()) {
-      const newPost = {
-        username: "Diduli",
-        date: new Date().toDateString(),
-        content: postContent,
-        image: selectedImages[0] || null,
-        showCommentBox: false,
-        showShareBox: false,
-        comments: [],
-        category: category,
-      };
-      setPosts([newPost, ...posts]);
-      setPostContent("");
-      setSelectedImages([]);
-      document.getElementById("postEditor").innerHTML = "";
+  const handlePost = async () => {
+    if(!postContent.trim()) return;
+
+    try {
+     const formData = new FormData();
+
+     formData.append("content",postContent);
+     formData.append("category",category === "Education" ? 1: 2);
+
+     const fileInput = document.getElementById("imageUpload");
+     for(let i = 0; i < fileInput.files.length; i++){
+        formData.append("media",fileInput.files[i]);
+     }
+
+     const response =  await studentService.createPost(formData);
+     console.log("Post created", response);
+        const newPost = {
+          username: "Diduli",
+          date: new Date().toDateString(),
+          content: postContent,
+          image: selectedImages[0] || null,
+          showCommentBox: false,
+          showShareBox: false,
+          comments: [],
+          category: category,
+        };
+        setPosts([newPost, ...posts]);
+        setPostContent("");
+        setSelectedImages([]);
+        document.getElementById("postEditor").innerHTML = "";
+        fileInput.value = "";
+      
+    } catch (error) {
+      console.error("Error creating post", error.message);
+      alert(error.message)
     }
+
   };
 
   const toggleCommentBox = (index) => {

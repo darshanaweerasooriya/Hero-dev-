@@ -2,9 +2,16 @@ import React from "react";
 import './welcome.css';
 import myimage from '../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from "react-router-dom";
 
 
-function sLoging() {
+function SLoging() {
+    const navigate = useNavigate();
+
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        navigate('/studentHome')
+    }
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
         <div className="container leftSide d-flex flex-column w-100 md-5 " style={{ flex: 1 }}>
@@ -16,7 +23,7 @@ function sLoging() {
        
         </div>
         <div className=""> {/* Reduced margin */}
-    <form className="sdetails ms-4">
+    <form className="sdetails ms-4" onSubmit={handleSubmit}>
         <div className="mb-2">
             {/* <label htmlFor="exampleInputEmail1" className="form-label small">Email address</label> */}
             <input
@@ -55,4 +62,4 @@ function sLoging() {
     );
 }
 
-export default sLoging;
+export default SLoging;
