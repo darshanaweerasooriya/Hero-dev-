@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./createNewEvent.css";
+import teacherService from "../../services/teacher.service";
 
 
 function CreatEvent() {
@@ -9,6 +10,7 @@ function CreatEvent() {
     venue: '',
     time: ''
   });
+  const[mediaFiles, setMediaFiles] = useState([]);
 
   const [rules, setRules] = useState([""]);
 
@@ -32,10 +34,22 @@ function CreatEvent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = { ...eventData, rules };
-      const response = await axios.post("https://jsonplaceholder.typicode.com/posts", payload);
-      console.log("Event Created:", response.data);
-      alert("Event submitted successfully!");
+     const formData = new FormData();
+     formData.append("name",eventData.name);
+     formData.append("description",eventData.description);
+     formData.append("eventType", eventData.eventType);
+
+     rules.forEach((rule, index) => {
+      formData.append(`rules[${index}]`, rule);
+    });
+
+    mediaFiles.forEach((file) =>{
+      formData.append("media", file);
+    });
+
+    const response = await teacherService.createEvent(formData);
+    console.log('Event created',response);
+    alert("Event created successfully!");
     } catch (error) {
       console.error("Error submitting event:", error);
       alert("Failed to submit event.");
@@ -49,7 +63,7 @@ function CreatEvent() {
           <div className="d-flex align-items-center justify-content-between w-100">
             <form style={{ width: "100%" }} onSubmit={handleSubmit}>
               <div className="input-group mb-3" style={{ width: "100%" }}>
-                <input type="file" className="form-control" id="inputGroupFile02" />
+                <input type="file" className="form-control" id="inputGroupFile02" onChange={(e) => setMediaFiles([e.target.files[0]])} />
               </div>
 
               <label className="label">Add Event Name</label>
@@ -67,8 +81,8 @@ function CreatEvent() {
               <textarea
                 className="form-control"
                 aria-label="Venue"
-                name="addEventDetails"
-                value={eventData.venue}
+                name="description"
+                value={eventData.description}
                 onChange={handleChange}
               ></textarea>
 
@@ -79,7 +93,7 @@ function CreatEvent() {
                 placeholder="Add Event Type"
                 aria-label="etpy"
                 name="eventType"
-                value={eventData.time}
+                value={eventData.eventType}
                 onChange={handleChange}
               />
 
@@ -102,7 +116,7 @@ function CreatEvent() {
                 Add New Rule
               </button>
               <div>
-              <button type="button" className="btn btn-purple mt-3" style={{ backgroundColor: '#8000b3', color: '#fff' }}>
+              <button type="submit" className="btn btn-purple mt-3" style={{ backgroundColor: '#8000b3', color: '#fff' }}>
                     Create Event
                   </button>
               </div>
