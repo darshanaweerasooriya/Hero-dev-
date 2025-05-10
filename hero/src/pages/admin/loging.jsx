@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 function AdminLog() {
     return (
+        // lgoin page here
         <div className="min-h-screen flex items-center justify-center bg-gray-100 ">
             <h4 className="text-center mt-5">Welcome HERO, Log into your account</h4>
             <form className=" p-8 rounded-lg shadow-md w-[30%] text-center mt-5">

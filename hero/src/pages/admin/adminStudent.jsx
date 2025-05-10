@@ -8,7 +8,7 @@ function AddStudent() {
 
     const handleAddTeacher = () => {
         navigate("/addingStudnet"); // Make sure this route exists in your Router
-    };
+    }; 
     return (
         <div>
              <div className=" flex justify-end  mb-6">

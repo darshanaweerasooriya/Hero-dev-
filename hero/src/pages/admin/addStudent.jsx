@@ -27,11 +27,12 @@ function AddingStudent() {
             }
         };
 
+        // Student add here
         return(
             <div>
             <form onSubmit={handleSubmit}>
                 <div className="row_header mt-3">
-                    <h3>Add Stdudent Details here</h3>
+                    <h3>Add Stdudent details here</h3>
 
                     
                     <div className="row mb-3">

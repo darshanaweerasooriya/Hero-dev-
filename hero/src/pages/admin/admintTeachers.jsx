@@ -32,7 +32,7 @@ function AddingTeacher() {
         <div>
             <form onSubmit={handleSubmit}>
                 <div className="row_header mt-3">
-                    <h3>Add Teacher Details here</h3>
+                    <h3>Add Teacher details here</h3>
 
                     <div className="row mb-3">
                         <label className="mt-2">Full Name</label>

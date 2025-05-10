@@ -22,6 +22,7 @@ function AdminDashboard() {
                     Logout
                 </button>
             </div>
+            {/* Dashboard add here */}
 
             {/* Main Content */}
             <div className="flex flex-col items-center justify-center mt-5">
@@ -30,7 +31,7 @@ function AdminDashboard() {
 
                 <Link to="/adminDashboard" className="flex items-center mt-4 cursor-pointer hover:bg-gray-200 p-2 rounded transition">
                 <AdminPanelSettingsIcon className="mr-2 text-black" />
-                <span className="text-lg font-semibold text-black ms-2">Add other admins </span>
+                <span className="text-lg font-semibold text-black ms-2">Add other admin</span>
                 </Link>
 
                 

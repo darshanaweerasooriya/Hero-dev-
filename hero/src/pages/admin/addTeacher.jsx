@@ -34,6 +34,7 @@ function AddTeachers() {
                         </div>
           <div className="teachersList mt-4">
           <table class="table">
+            {/* Table start here */}
   <thead>
     <tr>
     <th scope="col">Id</th>
