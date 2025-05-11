@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./medalsPoints.css"
 import myimage from "../../assests/images/welcome.png";
@@ -7,6 +7,8 @@ import FilterIcon from "@mui/icons-material/Filter1";
 import profile from "../../assests/images/profile.jpg";
 import testimage from "../../assests/images/classroomtest.jpg";
 import pp from "../../assests/images/profilepic.jpg"
+import studentService from "../../services/student.service";
+import gamificationService from "../../services/gamification.service";
 
 function Medal(){
     
@@ -15,12 +17,48 @@ function Medal(){
     const [profilePic, setProfilePic] = useState(pp);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [previewImage, setPreviewIamage] = useState(null);
+    const [userData, setUserData] = useState({username:"", level:""});
+    const [gamificationData, setGamificationData] = useState({level:"", points:""});
+      const levelMap = {
+        1: "Primary Students",
+        2: "Secondary Students (grade6-11)",
+        3: "Advance level Student",
+      };
+
+    useEffect(() =>{
+      async function fetchUser() {
+        try {
+          const user = await studentService.getUserById();
+          setUserData({
+            username: user.username,
+            level: levelMap[user.level]  || "Not Available",
+          });
+        } catch (error) {
+          console.error("Error fetching user data:",error.message);
+        }
+      }
+
+        fetchUser();
+      
+    },[]);
+
+    useEffect(() =>{
+      async function fetchGamification() {
+        try {
+          const gamificationData = await gamificationService.getGamification();
+          setGamificationData({
+            level: gamificationData.level,
+            points: gamificationData.points,
+          })
+        } catch (error) {
+          console.error("Error fetching gamification data:",error.message);
+        }
+      }
+
+      fetchGamification();
+    },[]);
+
     
-     
- 
-   
-    
- 
 
   //preview
   const togglePreview = (image) => {
@@ -50,16 +88,16 @@ function Medal(){
         />
       </div>
       <div className="ms-4">
-        <label className="pname d-block">Sophia Williams</label>
-        <label className="grade d-block">Grade 12 - Science Stream</label>
+        <label className="pname d-block">{userData.username}</label>
+        <label className="grade d-block">{userData.level}</label>
       </div>
     </div>
     <div className="card" styleN="width: 18rem;">
   <div className="card-body">
   <label>Batch</label>
-    <h5 className="card-title">GOLD </h5>
+    <h5 className="card-title">{gamificationData.level} </h5>
     <h6 className="card-subtitle mb-2 text-muted">Points</h6>
-    <p className="card-text">1000</p>
+    <p className="card-text">{gamificationData.points}</p>
     <a href="#" className="card-link">Card link</a>
     <a href="#" className="card-link">Another link</a>
   </div>

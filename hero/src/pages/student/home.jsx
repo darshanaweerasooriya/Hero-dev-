@@ -1,5 +1,5 @@
 // Home.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./home.css";
 import myimage from "../../assests/images/welcome.png";
@@ -10,18 +10,32 @@ import testimage from "../../assests/images/classroomtest.jpg";
 import studentService from "../../services/student.service";
 
 function Home() {
-  const [posts, setPosts] = useState([
-    {
-      username: "John Doe",
-      date: "May 1, 2025",
-      content: "Excited to start the new course! 📘",
-      image: testimage,
-      showCommentBox: false,
-      showShareBox: false,
-      comments: [],
-      category: "Education",
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() =>{
+    const fetchPosts = async () =>{
+    try {
+      const fetchPosts = await studentService.getAllPosts();
+
+      const transformedPosts = fetchPosts.map((post) => ({
+        username: post.userId?.username || "Unknown",
+        date: new Date(post.createdAt).toDateString(),
+        content: post.content,
+        image: post.media[0] || null,
+        showCommentBox: false,
+        showShareBox: false,
+        comments: post.comments || [],
+        category: post.category === 1 ? "Education" : "General",
+      }));
+      setPosts(transformedPosts);
+    } catch (error) {
+      console.error("Error loading posts:", error.message);
+    }
+  }
+    fetchPosts();
+  },[])
+  
+
 
   const [postContent, setPostContent] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);

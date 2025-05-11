@@ -1,16 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import './welcome.css';
 import myimage from '../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
+import studentService from "../../services/student.service";
 
 
 function SLoging() {
     const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        username:'',
+        password:''
+    });
+    const [error, setError] = useState('');
 
-    const handleSubmit = (e) =>{
+     const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value
+        });
+    };
+    const handleSubmit = async (e) =>{
         e.preventDefault();
-        navigate('/studentHome')
+        try {
+            const res = await studentService.loginStudent(formData);
+            console.log("Login successful", res);
+            navigate('/studentHome')
+        } catch (error) {
+            console.error(error);
+            setError(error.message || 'Login failed');
+        }
     }
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
@@ -27,17 +46,19 @@ function SLoging() {
         <div className="mb-2">
             {/* <label htmlFor="exampleInputEmail1" className="form-label small">Email address</label> */}
             <input
-        type="email"
-        id="email"
+        type="username"
+        id="username"
         placeholder="Enter your username"
+        value={formData.username}
+        onChange={handleChange}
         className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75" 
       />
             
         </div>
         <div className="mb-2">
             {/* <label htmlFor="exampleInputPassword1" className="form-label small">Password</label> */}
-            <input type="password" placeholder="Enter your Password"
-        className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75" id="exampleInputPassword1"/>
+            <input type="password" placeholder="Enter your Password" value={formData.password} onChange={handleChange}
+        className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75" id="password"/>
         </div>
         <div className="mb-2">
             <label className="small" htmlFor="exampleCheck1">Forgot Password?</label>
