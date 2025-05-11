@@ -10,21 +10,27 @@ import testimage from "../../assests/images/classroomtest.jpg";
 import studentService from "../../services/student.service";
 
 function Home() {
+  const [postContent, setPostContent] = useState("");
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [comment, setNewComment] = useState({});
+  const [category, setCategory] = useState("Education");
   const [posts, setPosts] = useState([]);
 
   useEffect(() =>{
+    //Fetch Posts
     const fetchPosts = async () =>{
     try {
       const fetchPosts = await studentService.getAllPosts();
 
       const transformedPosts = fetchPosts.map((post) => ({
+        id: post._id,
         username: post.userId?.username || "Unknown",
         date: new Date(post.createdAt).toDateString(),
         content: post.content,
         image: post.media[0] || null,
         showCommentBox: false,
         showShareBox: false,
-        comments: post.comments || [],
+        comment: post.comment || [],
         category: post.category === 1 ? "Education" : "General",
       }));
       setPosts(transformedPosts);
@@ -36,11 +42,6 @@ function Home() {
   },[])
   
 
-
-  const [postContent, setPostContent] = useState("");
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [newComment, setNewComment] = useState({});
-  const [category, setCategory] = useState("Education");
 
   const handleContentChange = (e) => {
     setPostContent(e.currentTarget.innerHTML);
@@ -84,7 +85,7 @@ function Home() {
           image: selectedImages[0] || null,
           showCommentBox: false,
           showShareBox: false,
-          comments: [],
+          comment: [],
           category: category,
         };
         setPosts([newPost, ...posts]);
@@ -100,6 +101,42 @@ function Home() {
 
   };
 
+  const handleLike = async(postId) =>{
+    try {
+      await studentService.likeAndUnlike(postId);
+      alert('liked successfully');
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+const handleComment = async (index) => {
+    const commentText = comment[index];
+    console.log("Comment text to send:", commentText);
+    
+    if (!commentText || !commentText.trim()) {
+        alert("Comment cannot be empty!!");
+        return;
+    }
+
+    const postId = posts[index].id;
+    try {
+        console.log("Sending:", commentText.trim());
+        await studentService.addComment(postId, commentText.trim());
+
+        const updatedPosts = [...posts];
+        updatedPosts[index].comment.push({
+            user: "You",
+            text: commentText,
+        });
+        setPosts(updatedPosts);
+        setNewComment({ ...comment, [index]: "" });
+    } catch (error) {
+        console.error("Error details:", error);
+        alert(error.message);
+    }
+}
+
   const toggleCommentBox = (index) => {
     const updatedPosts = [...posts];
     updatedPosts[index].showCommentBox = !updatedPosts[index].showCommentBox;
@@ -113,19 +150,19 @@ function Home() {
   };
 
   const handleCommentChange = (index, value) => {
-    setNewComment({ ...newComment, [index]: value });
+    setNewComment({ ...comment, [index]: value });
   };
 
   const handleCommentSubmit = (index) => {
-    if (!newComment[index]) return;
+    if (!comment[index]) return;
 
     const updatedPosts = [...posts];
-    updatedPosts[index].comments.push({
+    updatedPosts[index].comment.push({
       user: "You",
-      text: newComment[index],
+      text: comment[index],
     });
     setPosts(updatedPosts);
-    setNewComment({ ...newComment, [index]: "" });
+    setNewComment({ ...comment, [index]: "" });
   };
 
   return (
@@ -231,7 +268,7 @@ function Home() {
 
                 <hr />
                 <div className="d-flex justify-content-around text-muted">
-                  <button className="btn btn-light btn-sm w-100 me-1">👍 Like</button>
+                  <button className="btn btn-light btn-sm w-100 me-1" onClick={() => handleLike(post.id)}>👍 Like</button>
                   <button className="btn btn-light btn-sm w-100 me-1" onClick={() => toggleCommentBox(index)}>💬 Comment</button>
                   <button className="btn btn-light btn-sm w-100" onClick={() => toggleShareBox(index)}>↗️ Share</button>
                 </div>
@@ -242,12 +279,12 @@ function Home() {
                       type="text"
                       placeholder="Write a comment..."
                       className="form-control form-control-sm mb-2"
-                      value={newComment[index] || ""}
+                      value={comment[index] || ""}
                       onChange={(e) => handleCommentChange(index, e.target.value)}
                     />
-                    <button className="btn btn-primary btn-sm" onClick={() => handleCommentSubmit(index)}>Post Comment</button>
+                    <button className="btn btn-primary btn-sm" onClick={() => handleComment(index)}>Post Comment</button>
                     <ul className="list-unstyled mt-2">
-                      {post.comments.map((c, i) => (
+                      {post.comment.map((c, i) => (
                         <li key={i}><strong>{c.user}: </strong> {c.text}</li>
                       ))}
                     </ul>

@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from "react";
 import testspimage from "../../assests/images/testI2sp.jpg"; // fallback image
+import teacherService from "../../services/teacher.service";
 
 function Sevent() {
   const [events, setEvents] = useState([]);
 
+
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const dummyData = [
-          {
-            _id: "1",
-            title: "Sports Meet",
-            description: "Group num1 aadldld dldlgl ldlrlfdld dlrlrle flgtlgtlt lgogkgeo fek fbpmpm dfbkmdpbg",
-            imageUrl: testspimage,
-          },
-          {
-            _id: "2",
-            title: "Art Exhibition",
-            description: "Amazing art created by students from Grade 1 to 5 showcased.",
-            imageUrl: testspimage,
-          },
-        ];
+        const fetchEvents = await teacherService.getAllEvents();
 
-        setTimeout(() => {
-          setEvents(dummyData);
-        }, 500);
+        const fetchUploadedEvetns = fetchEvents.map((post) =>({
+          name: post.name,
+          description: post.description,
+          media: post.media[0] || null,
+
+        }));
+        setEvents(fetchUploadedEvetns);
       } catch (error) {
         console.error("Error fetching events:", error);
       }
@@ -70,13 +64,13 @@ function Sevent() {
 
                 <div className="d-flex align-items-center mt-3">
                   <img
-                    src={event.imageUrl || testspimage}
+                    src={event.media || testspimage}
                     className="img-fluid custom-pimg ms-2"
-                    alt={event.title}
+                    alt={event.name}
                     style={{ cursor: "pointer", width: "100px", height: "100px", objectFit: "cover" }}
                   />
                   <div className="d-flex flex-column ms-3">
-                    <label className="mb-1">{event.title}</label>
+                    <label className="mb-1">{event.name}</label>
                     <p className="mb-0">{event.description}</p>
                   </div>
                 </div>
