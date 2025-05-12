@@ -53,8 +53,11 @@ const teacherService = {
 
     async getInvitedClubs(userId){
         try {
-            const response = await api.get(`/api/clubs/invited/${userId}`,{
-            
+            const token = localStorage.getItem('token');
+            const response = await api.get(`/api/clubs/invited`,{
+                 headers:{
+                     'Authorization': `Bearer ${token}`
+                },
             });
             return response.data;
         } catch (error) {
@@ -62,7 +65,17 @@ const teacherService = {
                 error.response?.data?.message || 'Error getting user by id'
             );
         }
+    },
+
+    async acceptInvite(clubId) {
+    try {
+        const res = await api.post(`/api/clubs/accept/${clubId}`);
+        return res.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Error accepting invite');
     }
+}
+
 
 
 };

@@ -6,7 +6,9 @@ import GroupIcon from '@mui/icons-material/Group';
 import EventIcon from '@mui/icons-material/Event';
 import ProfileIcon from '@mui/icons-material/Person';
 
+
 export const SidebarData = [
+    
     {
         title: "Home",
         icon: <HomeIcon />,
@@ -30,7 +32,7 @@ export const SidebarData = [
     {
         title: "Groups",
         icon: <GroupIcon />,  
-        link: "/studentGroup"
+        link: `/studentGroup`
     },
     {
         title: "Events",
