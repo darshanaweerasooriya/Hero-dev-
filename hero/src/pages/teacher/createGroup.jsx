@@ -144,7 +144,7 @@ useEffect(() =>{
                 <div>
                   <p className="fw-bold">Suggested</p>
                   {students.map((student) => {
-                    const isInvited = invitedMembers.includes(student.id);
+                    const isInvited = invitedMembers.includes(student._id); ;
                   return (
                     <div key={student.id} className="d-flex align-items-center justify-content-between mb-3">
                     <div className="d-flex align-items-center">
@@ -159,7 +159,7 @@ useEffect(() =>{
       <button
         type="button"
         className={`btn ${isInvited ? 'btn-danger' : 'btn-primary'}`}
-        onClick={() => toggleInvite(student.id)}
+        onClick={() => toggleInvite(student._id)}
       >
         {isInvited ? "Remove" : "Invite"}
       </button>
