@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
+import adminService from "../../services/admin.service";
 
 function AddingTeacher() {
     const [formData, setFormData] = useState({
-        fullName: "",
-        email: "",
-        className: "",
-        gender: "",
-        password: "",
-        phoneNumber: "",
-        subject: ""
+         fullName: "",
+         username: "",
+         email:"",
+         password: "",
+         mobile: "",
+         level: "",
+         gender: "",
+         subject: ""
     });
 
     const handleChange = (e) => {
@@ -19,9 +21,13 @@ function AddingTeacher() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5000/api/teachers", formData);
+            const preparedData = {
+                ...formData,
+                level: parseInt(formData.level,10),
+            };
+            const res = await adminService.registerTeacher(preparedData);
             alert("Teacher added successfully!");
-            console.log(res.data);
+            console.log(res);
         } catch (err) {
             console.error(err);
             alert("Failed to add teacher");
@@ -49,6 +55,17 @@ function AddingTeacher() {
                     </div>
 
                     <div className="row mb-3">
+                           <div className="col-md-4">
+                            <label>Username</label>
+                            <input
+                                type="text"
+                                name="username"
+                                className="form-control"
+                                placeholder="Enter username"
+                                value={formData.username}
+                                onChange={handleChange}
+                            />
+                        </div>
                         <div className="col-md-4">
                             <label>Email</label>
                             <input
@@ -64,19 +81,23 @@ function AddingTeacher() {
                         <div className="col-md-3">
                             <label>Class</label>
                             <select
-                                name="className"
+                                name="level"
                                 className="form-select"
-                                value={formData.className}
+                                value={formData.level}
                                 onChange={handleChange}
                             >
-                                <option>Select Class</option>
-                                <option>6-A</option>
-                                <option>7-A</option>
-                                <option>8-A</option>
+                                <option>Select level</option>
+                                 <option value="3">Primary</option>
+                                <option value="2">Secondary</option>
+                                <option value="1">Advanced</option>
                             </select>
                         </div>
 
-                        <div className="col-md-3">
+                     
+                    </div>
+
+                    <div className="row mb-3">
+                           <div className="col-md-3">
                             <label>Gender</label>
                             <select
                                 name="gender"
@@ -89,9 +110,6 @@ function AddingTeacher() {
                                 <option>Female</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div className="row mb-3">
                         <div className="col-md-4">
                             <label>Password</label>
                             <input
@@ -108,10 +126,10 @@ function AddingTeacher() {
                             <label>Phone Number</label>
                             <input
                                 type="text"
-                                name="phoneNumber"
+                                name="mobile"
                                 className="form-control"
                                 placeholder="Enter Phone Number"
-                                value={formData.phoneNumber}
+                                value={formData.mobile}
                                 onChange={handleChange}
                             />
                         </div>
