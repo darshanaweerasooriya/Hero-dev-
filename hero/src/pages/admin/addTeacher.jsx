@@ -1,10 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
+import teacherService from "../../services/teacher.service";
+import adminService from "../../services/admin.service";
 
 function AddTeachers() {
+   const[teachers,setTeachers]=useState([]);
     const navigate = useNavigate();
 
+      const levelMap = {
+        1: "Primary Teacher",
+        2: "Secondary Teachers (grade6-11)",
+        3: "Advance level Teacher",
+      };
+
+    useEffect(() =>{
+    const fetchStudents = async () =>{
+      try {
+        const fetchTeachers = await adminService.getAllTeachers();
+
+        const fetchUploadedTeachers = fetchTeachers.map((teacher) =>({
+          fullName:teacher.fullName,
+          username:teacher.username,
+          level:levelMap[teacher.level],
+          subject:teacher.subject,
+          email:teacher.email,
+          gender:teacher.gender
+        }));
+        setTeachers(fetchUploadedTeachers);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    }
+    fetchStudents();
+  },[]);
     const handleAddTeacher = () => {
         navigate("/addingTeachers"); // Make sure this route exists in your Router
     };
@@ -38,20 +67,24 @@ function AddTeachers() {
   <thead>
     <tr>
     <th scope="col">Id</th>
-      <th scope="col">Name</th>
-      <th scope="col">Subject</th>
+      <th scope="col">FullName</th>
+       <th scope="col">Username</th>
+      <th scope="col">Class</th>
       <th scope="col">Email</th>
       <th scope="col">Gender</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Maths</td>
-      <td>mark@gmail.com</td>
-      <td>Male</td>
+     {teachers.map((student, index) => (
+    <tr key={index}>
+      <th scope="row">{index + 1}</th>
+      <td>{student.fullName}</td>
+      <td>{student.username}</td>
+      <td>{student.level || "N/A"}</td>
+      <td>{student.email || "N/A"}</td>
+      <td>{student.gender || "N/A"}</td>
     </tr>
+  ))}
    
   </tbody>
 </table>

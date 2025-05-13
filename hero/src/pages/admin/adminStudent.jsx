@@ -1,10 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
+import studentService from "../../services/student.service";
 
 
 function AddStudent() {
-    const navigate = useNavigate();
+  const[students, setStudents] = useState([]);
+  const navigate = useNavigate();
+
+  const levelMap = {
+        1: "Primary Students",
+        2: "Secondary Students (grade6-11)",
+        3: "Advance level Student",
+      };
+
+  useEffect(() =>{
+    const fetchStudents = async () =>{
+      try {
+        const fetchStudents = await studentService.getAllUsers();
+
+        const fetchUploadedStudents = fetchStudents.map((student) =>({
+          fullName:student.fullName,
+          username:student.username,
+          level:levelMap[student.level],
+          subject:student.subject
+        }));
+        setStudents(fetchUploadedStudents);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    }
+    fetchStudents();
+  },[]);
+
+
+
 
     const handleAddTeacher = () => {
         navigate("/addingStudnet"); // Make sure this route exists in your Router
@@ -46,14 +76,16 @@ function AddStudent() {
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>234354</td>
-      <td>mark@gmail.com</td>
-      <td>13-A</td>
-      <td>Male</td>
+   {students.map((student, index) => (
+    <tr key={index}>
+      <th scope="row">{index + 1}</th>
+      <td>{student.fullName}</td>
+      <td>{student.username}</td>
+      <td>{student.email || "N/A"}</td>
+      <td>{student.level || "N/A"}</td>
+      <td>{student.gender || "N/A"}</td>
     </tr>
+  ))}
    
   </tbody>
 </table>

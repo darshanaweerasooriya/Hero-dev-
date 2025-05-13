@@ -1,10 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import './teacherLogin.css';
 import myimage from '../../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from "react-router-dom";
+import adminService from "../../../services/admin.service";
 
 
 function TeacherLoging() { 
+    const navigate = useNavigate();
+    const[formData, setFormData] = useState({
+        username:'',
+        password:''
+    });
+    const[error, setError] = useState('');
+
+       const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value
+        });
+    };
+
+     const handleSubmit = async (e) =>{
+        e.preventDefault();
+        try {
+            const res = await adminService.loginTeacher(formData);
+            console.log("Login successful", res);
+            navigate('/teacherProfile')
+        } catch (error) {
+            console.error(error);
+            setError(error.message || 'Login failed');
+        }
+    }
+
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
             <div className="container leftSide d-flex flex-column w-100 md-5 " style={{ flex: 1 }}>
@@ -16,12 +44,14 @@ function TeacherLoging() {
                 </div>
 
                 <div className="">
-                    <form className="sdetails ms-4">
+                    <form className="sdetails ms-4" onSubmit={handleSubmit}>
                         <div className="mb-2">
                             <input
-                                type="email"
-                                id="email"
+                                type="username"
+                                id="username"
                                 placeholder="Enter your username"
+                                value={formData.username}
+                                onChange={handleChange}
                                 className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75" 
                             />
                             
@@ -30,8 +60,10 @@ function TeacherLoging() {
                             <input 
                                 type="password" 
                                 placeholder="Enter your Password"
+                                value={formData.password} 
+                                onChange={handleChange}
                                 className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75"
-                                id="exampleInputPassword1"
+                                id="password"
                             />
                         </div>
                         <div className="mb-2">
