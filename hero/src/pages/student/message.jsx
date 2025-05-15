@@ -1,26 +1,62 @@
 import React, { useState, useEffect, useRef } from "react";
-import userImage from "../../assests/images/user.jpg"
+import userImage from "../../assests/images/user.jpg";
+
+import messageService from "../../services/message.service";
+import teacherService from "../../services/teacher.service";
+import adminService from "../../services/admin.service";
+import studentService from "../../services/student.service";
 
 function Message() {
   const [messages, setMessages] = useState([]);
   const [newMsg, setNewMsg] = useState("");
+  const [students, setStudents] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [selectedChatUser, setSelectedChatUser] = useState(null);
   const messagesEndRef = useRef(null);
 
-  // Hardcoded initial messages
+  const currentUser = {
+    id: localStorage.getItem("userId"),
+    type: localStorage.getItem("userType"), // 'student' or 'teacher'
+  };
+
   useEffect(() => {
-    const initialMessages = [
-      { id: 1, text: "Hey there!", sender: "Alice" },
-      { id: 2, text: "Hi! How are you?", sender: "You" },
-      { id: 3, text: "I'm doing great, thanks!", sender: "Alice" },
-    ];
-    setMessages(initialMessages);
+    const fetchUsers = async () => {
+      const stu = await studentService.getAllUsers();
+      const teach = await adminService.getAllTeachers();
+      setStudents(stu.map((s) => ({ ...s, type: "student" })));
+      setTeachers(teach.map((t) => ({ ...t, type: "teacher" })));
+    };
+    fetchUsers();
   }, []);
 
-  const handleSend = () => {
-    if (newMsg.trim() === "") return;
-    const msg = { id: Date.now(), text: newMsg, sender: "You" };
-    setMessages([...messages, msg]);
-    setNewMsg("");
+  const loadMessages = async (chatUser) => {
+    try {
+      const data = await messageService.getMessages(chatUser._id);
+      setMessages(data);
+      setSelectedChatUser(chatUser);
+      setNewMsg(""); // Clear input on user change
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const handleSend = async () => {
+    if (newMsg.trim() === "" || !selectedChatUser) return;
+
+    const data = {
+      senderType: currentUser.type,
+      receiverId: selectedChatUser._id,
+      receiverType: selectedChatUser.type,
+      text: newMsg,
+    };
+
+    try {
+      const sent = await messageService.sendMessage(data);
+      setMessages((prev) => [...prev, sent]);
+      setNewMsg("");
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   useEffect(() => {
@@ -30,14 +66,39 @@ function Message() {
   return (
     <div style={styles.container}>
       <div className="row">
-        {/* Left Section */}
+        {/* Chat box */}
         <div className="col-md-8 leftcontainer p-3 mt-4">
+          <div style={styles.chatHeader}>
+            {selectedChatUser ? (
+              <>
+                <img src={userImage} alt="avatar" style={styles.headerAvatar} />
+                <span style={{ marginLeft: 10, fontWeight: "bold" }}>
+                  {selectedChatUser.name || selectedChatUser.fullName}
+                </span>
+              </>
+            ) : (
+              <span>Select a user to start chatting.</span>
+            )}
+          </div>
           <div style={styles.chatBox}>
-            {messages.map((msg) => (
-              <div key={msg.id} style={styles.message}>
-                <strong>{msg.sender}:</strong> {msg.text}
-              </div>
-            ))}
+            {selectedChatUser ? (
+              messages.map((msg, i) => (
+                <div
+                  key={i}
+                  style={{
+                    ...styles.message,
+                    textAlign: msg.senderId === currentUser.id ? "right" : "left",
+                  }}
+                >
+                  <strong>
+                    {msg.senderId === currentUser.id ? "You" : selectedChatUser.name}:
+                  </strong>{" "}
+                  {msg.text}
+                </div>
+              ))
+            ) : (
+              <div style={{ padding: "10px" }}>No messages yet.</div>
+            )}
             <div ref={messagesEndRef} />
           </div>
           <div style={styles.inputBox}>
@@ -47,54 +108,41 @@ function Message() {
               value={newMsg}
               onChange={(e) => setNewMsg(e.target.value)}
               style={styles.input}
+              disabled={!selectedChatUser}
             />
-            <button onClick={handleSend} style={styles.button}>
+            <button
+              onClick={handleSend}
+              style={styles.button}
+              disabled={!selectedChatUser}
+            >
               Send
             </button>
           </div>
         </div>
 
-        {/* Right Section */}
+        {/* Online People */}
         <div className="col-md-4 rightcontainer p-3 bg-light mt-4">
-          <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>Online people</h1>
-          <div className="card">
-            <div className="card-body">
-              {/* Search input */}
-              <div className="input-group input-group-sm mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  aria-label="Sizing example input"
-                  aria-describedby="inputGroup-sizing-sm"
-                  placeholder="Search..."
-                />
-              </div>
-
-              {/* Older Messages */}
-              <h5 className="text-muted mb-3">Older Messages</h5>
-              <div style={styles.chatPreview}>
+          <h4>Online People</h4>
+          {[...students, ...teachers].map((user) => {
+            const isSelected = selectedChatUser && selectedChatUser._id === user._id;
+            return (
+              <div
+                key={user._id}
+                onClick={() => loadMessages(user)}
+                style={{
+                  ...styles.chatPreview,
+                  backgroundColor: isSelected ? "#e1f5fe" : "#fff",
+                  border: isSelected ? "2px solid #0288d1" : "none",
+                }}
+              >
                 <img src={userImage} alt="avatar" style={styles.avatar} />
                 <div style={styles.chatInfo}>
-                  <strong>John</strong>
-                  <p style={styles.previewText}>Are you joining the meeting?</p>
+                  <strong>{user.name || user.fullName}</strong>
+                  <p style={styles.previewText}>{user.type}</p>
                 </div>
               </div>
-              <div style={styles.chatPreview}>
-                <img src={userImage} alt="avatar" style={styles.avatar} />
-                <div style={styles.chatInfo}>
-                  <strong>Sara</strong>
-                  <p style={styles.previewText}>Let’s meet at 3 PM.</p>
-                </div>
-              </div>
-              <div style={styles.chatPreview}>
-                <img src={userImage} alt="avatar" style={styles.avatar} />
-                <div style={styles.chatInfo}>
-                  <strong>Mike</strong>
-                  <p style={styles.previewText}>Don’t forget the documents.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -102,14 +150,19 @@ function Message() {
 }
 
 const styles = {
-  container: {
-    width: "100%",
-    margin: "0 auto",
-    fontFamily: "Arial, sans-serif",
+  container: { width: "100%", margin: "0 auto" },
+  chatHeader: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "10px",
+    padding: "10px",
+    backgroundColor: "#e0e0e0",
+    borderRadius: "5px",
+    fontSize: "16px",
   },
   chatBox: {
     border: "1px solid #ccc",
-    height: "300px",
+    height: "400px",
     padding: "10px",
     overflowY: "auto",
     background: "#f9f9f9",
@@ -117,11 +170,14 @@ const styles = {
     marginBottom: "10px",
   },
   message: {
-    padding: "5px 0",
+    padding: "5px 10px",
+    marginBottom: "5px",
+    backgroundColor: "#ffffff",
+    borderRadius: "5px",
+    maxWidth: "75%",
+    display: "inline-block",
   },
-  inputBox: {
-    display: "flex",
-  },
+  inputBox: { display: "flex" },
   input: {
     flex: 1,
     padding: "8px",
@@ -142,23 +198,21 @@ const styles = {
     alignItems: "center",
     padding: "10px",
     marginBottom: "10px",
-    backgroundColor: "#fff",
     borderRadius: "10px",
     boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
     cursor: "pointer",
-    transition: "background-color 0.2s",
   },
-  chatInfo: {
-    marginLeft: "10px",
-  },
-  previewText: {
-    margin: 0,
-    fontSize: "13px",
-    color: "#555",
-  },
+  chatInfo: { marginLeft: "10px" },
+  previewText: { margin: 0, fontSize: "13px", color: "#555" },
   avatar: {
     width: "40px",
     height: "40px",
+    borderRadius: "50%",
+    objectFit: "cover",
+  },
+  headerAvatar: {
+    width: "30px",
+    height: "30px",
     borderRadius: "50%",
     objectFit: "cover",
   },
