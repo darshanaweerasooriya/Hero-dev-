@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
+import io from "socket.io-client";
 import userImage from "../../assests/images/user.jpg";
 
 import messageService from "../../services/message.service";
 import teacherService from "../../services/teacher.service";
 import adminService from "../../services/admin.service";
 import studentService from "../../services/student.service";
+
+const socket = io("http://localhost:5000"); // use your backend URL
 
 function Message() {
   const [messages, setMessages] = useState([]);
@@ -13,11 +16,7 @@ function Message() {
   const [teachers, setTeachers] = useState([]);
   const [selectedChatUser, setSelectedChatUser] = useState(null);
   const messagesEndRef = useRef(null);
-
-  const currentUser = {
-    id: localStorage.getItem("userId"),
-    type: localStorage.getItem("userType"), // 'student' or 'teacher'
-  };
+  const currentUser = getUserFromToken();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -29,12 +28,31 @@ function Message() {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    if (currentUser?.id) {
+      socket.emit("join", currentUser.id); // Join your room
+    }
+
+    socket.on("newMessage", (msg) => {
+      if (
+        selectedChatUser &&
+        (msg.senderId === selectedChatUser._id || msg.receiverId === selectedChatUser._id)
+      ) {
+        setMessages((prev) => [...prev, msg]);
+      }
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [selectedChatUser, currentUser]);
+
   const loadMessages = async (chatUser) => {
     try {
       const data = await messageService.getMessages(chatUser._id);
       setMessages(data);
       setSelectedChatUser(chatUser);
-      setNewMsg(""); // Clear input on user change
+      setNewMsg("");
     } catch (error) {
       console.error(error.message);
     }
@@ -44,10 +62,10 @@ function Message() {
     if (newMsg.trim() === "" || !selectedChatUser) return;
 
     const data = {
-      senderType: currentUser.type,
       receiverId: selectedChatUser._id,
       receiverType: selectedChatUser.type,
       text: newMsg,
+      senderType: currentUser.type,
     };
 
     try {
@@ -58,6 +76,22 @@ function Message() {
       console.error(err.message);
     }
   };
+
+  function getUserFromToken() {
+    const token = localStorage.getItem("token");
+    if (!token) return { id: null, type: null };
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return {
+        id: payload.userId,
+        type: payload.userType,
+      };
+    } catch (e) {
+      console.error("Invalid token", e);
+      return { id: null, type: null };
+    }
+  }
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -108,12 +142,15 @@ function Message() {
               value={newMsg}
               onChange={(e) => setNewMsg(e.target.value)}
               style={styles.input}
-              disabled={!selectedChatUser}
+              
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSend();
+              }}
             />
             <button
               onClick={handleSend}
               style={styles.button}
-              disabled={!selectedChatUser}
+             
             >
               Send
             </button>

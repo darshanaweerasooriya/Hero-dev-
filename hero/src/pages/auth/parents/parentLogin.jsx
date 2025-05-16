@@ -1,11 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import './parentlogin.css';
 import myimage from '../../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import parentService from "../../../services/parent.service";
 
 
 function Plogin() {  
+    const navigate = useNavigate();
+    const[formData,setFormData] = useState({
+        userName:'',
+        password:''
+    });
+    const[error, setError] = useState('');
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) =>{
+        e.preventDefault();
+        try {
+            const res = await parentService.loginParent(formData);
+            console.log(res);
+            navigate('/pOverview');
+        } catch (error) {
+            console.error(error);
+            setError(error.message || 'Login failed');
+        }
+    }
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
             <div className="container leftSide d-flex flex-column w-100 md-5 " style={{ flex: 1 }}>
@@ -17,12 +43,15 @@ function Plogin() {
                 </div>
 
                 <div className="">
-                    <form className="sdetails ms-4">
+                    <form className="sdetails ms-4" onSubmit={handleSubmit}>
                         <div className="mb-2">
                             <input
-                                type="email"
-                                id="email"
+                                type="userName"
+                                id="userName"
+                                name="userName" 
                                 placeholder="Enter your username"
+                                value={formData.userName}
+                                onChange={handleChange}
                                 className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75" 
                             />
                            
@@ -31,8 +60,11 @@ function Plogin() {
                             <input 
                                 type="password" 
                                 placeholder="Enter your Password"
+                                value={formData.password} 
+                                onChange={handleChange}
                                 className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75"
-                                id="exampleInputPassword1"
+                                id="password"
+                                name="password"
                             />
                         </div>
 

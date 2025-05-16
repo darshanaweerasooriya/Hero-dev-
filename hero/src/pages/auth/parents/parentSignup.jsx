@@ -1,34 +1,90 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './parentlogin.css';
 import myimage from '../../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
+import studentService from "../../../services/student.service";
+import parentService from "../../../services/parent.service";
 
 function Psignup() {
-    // Sample children list (replace with real data/API)
-    const childrenList = [
-        { id: 1, name: "Amal Perera" },
-        { id: 2, name: "Nimali Silva" },
-        { id: 3, name: "Kasun Fernando" }
-    ];
-
+    const[formData, setFormData] = useState({
+        userName:"",
+        email: "",
+        password: "",
+        confirmPassword: ""
+    })
+     const [childrenList, setChildrenList] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredChildren, setFilteredChildren] = useState([]);
     const [selectedChild, setSelectedChild] = useState(null);
 
-    const handleSearchChange = (query) => {
-        setSearchQuery(query);
-        const filtered = childrenList.filter((child) =>
-            child.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredChildren(filtered);
-    };
+    useEffect(() =>{
+        const fetchChildren = async () =>{
+            try {
+                const users = await studentService.getAllUsers();
+                console.log("Fetched users:", users);
+                const formattedChildren = users.map((user) =>({
+                    id: user._id,
+                    name: user.username
+                }));
+                setChildrenList(formattedChildren);
+            } catch (error) {
+                console.error("Error fetching children:", error.message);
+            }
+        }
+        fetchChildren();
+    },[]);
+const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    const filtered = childrenList.filter((child) =>
+        child.name && child.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredChildren(filtered);
+
+    // Auto-select if only one match
+    if (filtered.length === 1 && filtered[0].name.toLowerCase() === query.toLowerCase()) {
+        setSelectedChild(filtered[0]);
+    } else {
+        setSelectedChild(null); // Clear if no exact match
+    }
+};
+
+
 
     const handleChildSelect = (child) => {
         setSelectedChild(child);
         setSearchQuery(child.name);
+        console.log("Selected Child:", selectedChild);
+
         setFilteredChildren([]);
     };
+
+    const handleSubmit = async (e) =>{
+        e.preventDefault();
+        if(!selectedChild){
+            alert("Please select a child");
+            return;
+        }
+
+        if(formData.password !== formData.confirmPassword){
+            alert("Passwords do not match");
+            return;
+        }
+
+        const payload = {
+            userName: formData.userName,
+            email: formData.email,
+            password: formData.password,
+            children:selectedChild.id
+        };
+
+        try {
+            const response = await parentService.registerParent(payload);
+            alert("Parent registered successfully");
+        } catch (error) {
+            alert("Error registering parent" + error.message);
+        }
+    }
 
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
@@ -40,12 +96,14 @@ function Psignup() {
                 </div>
 
                 <div className="">
-                    <form className="sdetails ms-4">
+                    <form className="sdetails ms-4" onSubmit={handleSubmit}>
                         <div className="mb-2">
                             <input
                                 type="text"
                                 id="userName"
                                 placeholder="User name"
+                                value={formData.userName}
+                                onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
                                 className="bg-transparent border-b border-gray-500 py-0.5 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75 rounded"
                             />
                         </div>
@@ -54,6 +112,8 @@ function Psignup() {
                                 type="email"
                                 id="email"
                                 placeholder="Email"
+                                value={formData.email}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 className="bg-transparent border-b border-gray-500 mt-1 py-0.5 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75 rounded"
                             />
                         </div>
@@ -62,6 +122,8 @@ function Psignup() {
                                 type="password"
                                 id="password"
                                 placeholder="Password"
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 className="bg-transparent border-b border-gray-500 mt-1 py-0.5 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75 rounded"
                             />
                         </div>
@@ -70,6 +132,8 @@ function Psignup() {
                                 type="text"
                                 id="confirmPassword"
                                 placeholder="Re-enter Password"
+                                value={formData.confirmPassword}
+                                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                                 className="bg-transparent border-b border-gray-500 mt-1 py-0.5 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75 rounded"
                             />
                         </div>
