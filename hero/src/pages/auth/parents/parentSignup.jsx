@@ -180,7 +180,7 @@ const handleSearchChange = (query) => {
                 </div>
 
                 <div className="d-flex justify-content-start ms-4 mt-4">
-                    <button className="btn btn-light d-flex align-items-center px-3 py-2 rounded w-40 shadow-sm"
+                    <button  onClick={() => window.location.href = "http://localhost:3001/api/auth/google"} className="btn btn-light d-flex align-items-center px-3 py-2 rounded w-40 shadow-sm"
                         style={{ fontSize: "14px" }}>
                         <img
                             src="https://w7.pngwing.com/pngs/506/509/png-transparent-google-company-text-logo.png"

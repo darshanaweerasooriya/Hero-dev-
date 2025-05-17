@@ -1,28 +1,39 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./friendRequest.css";
+import teacherService from "../../services/teacher.service";
 
 function PEvents() {
-    const [requests, setRequests] = useState([]);
+    const [events, setEvents] = useState([]); 
     
-        useEffect(() => {
-            // Dummy data for now; you can replace with actual API later
-            setRequests([
-                "Science Fair",
-                "Mini Project I",
-                "MAths Exhibitions",
-             
-            ]);
-        }, []);
+useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const fetchEvents = await teacherService.getAllEvents();
+
+        const fetchUploadedEvetns = fetchEvents.map((post) =>({
+          name: post.name,
+          description: post.description,
+          media: post.media[0] || null,
+
+        }));
+        setEvents(fetchUploadedEvetns);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
     
         return (
             <div className="request-container">
                 <ul className="list-group">
-                    {requests.map((name, index) => (
+                    {events.map((event, index) => (
                         <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="circle-avatar"></div>
-                                <span>{name}</span>
+                                <span>{event.name}</span>
                             </div>
                             <div className="d-flex gap-2">
                                 <button className="btn btn-accept">View</button>

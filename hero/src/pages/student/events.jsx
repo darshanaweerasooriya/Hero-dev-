@@ -84,7 +84,7 @@ function Sevent() {
           <h5>Upcoming Events</h5>
           <ul>
             {events.map((event) => (
-              <li key={event._id}>{event.title}</li>
+              <li key={event._id}>{event.name}</li>
             ))}
           </ul>
         </div>
