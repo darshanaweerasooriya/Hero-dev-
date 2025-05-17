@@ -6,6 +6,7 @@ import gamificationService from "../../services/gamification.service";
 
 function Poverview() {
     const[gamification, setGamification] = useState([]);
+     const [username, setUsername] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -13,7 +14,8 @@ function Poverview() {
         const fetchData = async () => {
             try {
                 const data = await gamificationService.getGamificationForChild();
-                setGamification(data);
+                setGamification(data?.gamification);
+                setUsername(data?.username);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -41,8 +43,8 @@ function Poverview() {
                                 <label>Level</label>
                                 <h5 className="card-title">{gamification?.level}</h5>
                                 <h6 className="card-subtitle mb-2 text-muted">Points</h6>
-                                <p className="card-text">{gamification?.gamification?.points || 0}</p>
-                                <p className="card-text">Username: {gamification?.username}</p>
+                                <p className="card-text">{gamification?.points || 0}</p>
+                                <p className="card-text">Username: {username}</p>
                             </div>
                         </div>
                     </div>

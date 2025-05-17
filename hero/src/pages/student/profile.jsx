@@ -1,9 +1,10 @@
-import React, { useState }  from "react";
+import React, { useEffect, useState }  from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 import "./profile.css";
 import testimage from "../../assests/images/classroomtest.jpg";
 import pp from "../../assests/images/profilepic.jpg"
 import Performance from "./perfomance"
+import studentService from "../../services/student.service";
 
 
 
@@ -14,8 +15,33 @@ function Profile() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewImage, setPreviewIamage] = useState(null);
   const [activeTab, setActiveTab] = useState("performance");
+   const [userData, setUserData] = useState({username:"", level:"",fullName:"",mobile:"",gender:"",subject:""});
+    const levelMap = {
+        1: "Primary Students",
+        2: "Secondary Students (grade6-11)",
+        3: "Advance level Student",
+      };
+  
+    useEffect(() =>{
+      async function fetchUser() {
+        try {
+          const user = await studentService.getUserById();
+          setUserData({
+            username: user.username,
+            level: levelMap[user.level]  || "Not Available",
+            fullName: user.fullName,
+            mobile: user.mobile,
+            gender: user.gender,
+            subject: user.subject,
+          });
+        } catch (error) {
+          console.error("Error fetching user data:",error.message);
+        }
+      }
 
-
+        fetchUser();
+      
+    },[]);
   //file selection
   const handleCoverChange = (event) => {
     const file = event.target.files[0];
@@ -66,8 +92,8 @@ function Profile() {
         />
       </div>
       <div className="ms-4">
-        <label className="pname d-block">Sophia Williams</label>
-        <label className="grade d-block">Grade 12 - Science Stream</label>
+        <label className="pname d-block">{userData.username}</label>
+        <label className="grade d-block">{userData.level}</label>
       </div>
     </div>
 
@@ -113,9 +139,29 @@ function Profile() {
         {/* Tab Content */}
         <div className="tab-content mt-3">
           {activeTab === "performance" && (
-            <div>
-              <perfomance/>
+               <div className="container">
+            <div className="row">
+              <div className="col-md-6">
+                <h3>Full Name</h3>
+                  <p>{userData.fullName}</p>
+              </div>
+            <div className="col-md-6">
+              <h3>Gender</h3>
+                <p>{userData.gender}</p>
             </div>
+            </div>
+  <div className="row">
+    <div className="col-md-6">
+      <h3>Mobile</h3>
+      <p>{userData.mobile}</p>
+    </div>
+    <div className="col-md-6">
+      <h3>Subject</h3>
+      <p>{userData.subject}</p>
+    </div>
+  </div>
+</div>
+
           )}
           {activeTab === "attendance" && (
             <div>

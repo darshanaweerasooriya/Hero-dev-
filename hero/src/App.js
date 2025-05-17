@@ -106,6 +106,7 @@ function App() {
 
       
         <Route path="/" element={<AdminLayout />}> 
+        <Route path="/adminlog" element={<AdminLog/>}/>
         <Route path='/adminDahsboard' element={<AdminDashboard/>}/>
         <Route path='/addTeacher' element={<AddTeachers />}/>
         <Route path='/addStudent' element={<AddStudent/>}/>

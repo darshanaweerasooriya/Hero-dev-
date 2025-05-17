@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import testimage from "../../assests/images/classroomtest.jpg";
 import pp from "../../assests/images/profilepic.jpg"
 import Performance from "../student/perfomance"
 import "./teacherProfile.css";
+import teacherService from "../../services/teacher.service";
 
 function TeacherProfile() {
       const [coverPhoto, setCoverPhoto] = useState(testimage);
@@ -11,8 +12,35 @@ function TeacherProfile() {
       const [isPreviewOpen, setIsPreviewOpen] = useState(false);
       const [previewImage, setPreviewIamage] = useState(null);
       const [activeTab, setActiveTab] = useState("performance");
+      const [userData, setUserData] = useState({username:"", level:"",email:"",gender:"",mobile:"",subject:""});
+
+      const levelMap = {
+          1: "Primary Teacher",
+          2: "Secondary Teacher (grade6-11)",
+          3: "Advance level Teacher",
+      };
     
-    
+      useEffect(() =>{
+        async function fetchUser() {
+        try {
+          const user = await teacherService.getTeacherById();
+          setUserData({
+            username: user.username,
+            level: levelMap[user.level]  || "Not Available",
+            email:user.email,
+            gender:user.gender,
+            mobile:user.mobile,
+            subject:user.subject
+          });
+        } catch (error) {
+          console.error("Error fetching user data:",error.message);
+        }
+      }
+
+        fetchUser();
+      
+    },[]);
+      
       //file selection
       const handleCoverChange = (event) => {
         const file = event.target.files[0];
@@ -63,8 +91,8 @@ function TeacherProfile() {
             />
           </div>
           <div className="ms-4">
-            <label className="pname d-block">Sophia</label>
-            <label className="grade d-block">Grade 12 - Science Stream</label>
+            <label className="pname d-block">{userData.username}</label>
+            <label className="grade d-block">{userData.level}</label>
           </div>
         </div>
     
@@ -110,14 +138,34 @@ function TeacherProfile() {
             {/* Tab Content */}
             <div className="tab-content mt-3">
               {activeTab === "performance" && (
-                <div>
-                  <perfomance/>
-                </div>
+                <div className="container">
+            <div className="row">
+              <div className="col-md-6">
+                <h3>Email</h3>
+                  <p>{userData.email}</p>
+              </div>
+            <div className="col-md-6">
+              <h3>Gender</h3>
+                <p>{userData.gender}</p>
+            </div>
+            </div>
+  <div className="row">
+    <div className="col-md-6">
+      <h3>Mobile</h3>
+      <p>{userData.mobile}</p>
+    </div>
+    <div className="col-md-6">
+      <h3>Subject</h3>
+      <p>{userData.subject}</p>
+    </div>
+  </div>
+</div>
+
               )}
               {activeTab === "attendance" && (
                 <div>
-                  <h3>Attendance Record</h3>
-                  <p>Attendance details will be displayed here.</p>
+                  <h3>Email</h3>
+                  <p>{userData.email}</p>
                 </div>
               )}
               {activeTab === "assignments" && (

@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import './parentlogin.css';
 import passwordImg from '../../../assests/images/Password-Reset.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import parentService from "../../../services/parent.service";
 
 
-function pEmail() {  
+function PEmail() {  
+        const [email, setEmail] = useState("");
+        const [error, setError] = useState("");
+        const [message, setMessage] = useState("");
+         const navigate = useNavigate();
+        const handleSubmit = async (e) =>{
+        e.preventDefault();
+        setError("");
+        setMessage("");
+
+        try {
+            const result = await parentService.forgotPassword({email});
+            setMessage("Confirmation code sent to your email.");
+            setTimeout(() => navigate("/emailConfirm", { state: { email } }),2000)
+        } catch (error) {
+            setError(error.message || "Something went wrong");
+        }
+    }
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
             <div className="container leftSide d-flex flex-column w-100 md-5 " style={{ flex: 1 }}>
@@ -17,11 +35,13 @@ function pEmail() {
                 </div>
 
                 <div className="">
-                    <form className="sdetails ms-4">
+                    <form className="sdetails ms-4" onSubmit={handleSubmit}>
                         <div className="mb-2">
                             <input
                                 type="email"
                                 id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your username"
                                 className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75" 
                             />
@@ -31,12 +51,12 @@ function pEmail() {
 
                         
                         
-                         <Link to="/emailConfirm">
-                             <button type="submit" className="btn btn-primary btn-sm w-75 mt-3" 
-                             style={{ backgroundColor: "#648DDB", borderColor: "#648DDB", color: "white", width: 100 }}>
-                             Submit
-                             </button>
-                         </Link>
+                          <button type="submit" className="btn btn-primary btn-sm w-75 mt-3"
+                            style={{ backgroundColor: "#648DDB", borderColor: "#648DDB", color: "white", width: 100 }}>
+                            Submit
+                        </button>
+                        {error && <div className="text-danger mt-2">{error}</div>}
+                        {message && <div className="text-success mt-2">{message}</div>}
                     </form>
                 </div>
 
@@ -59,4 +79,4 @@ function pEmail() {
     );
 }
 
-export default pEmail;  
+export default PEmail;  

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 import "./teacherHome.css";
 import myimage from "../../assests/images/welcome.png";
@@ -6,25 +6,39 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import FilterIcon from "@mui/icons-material/Filter1";
 import profile from "../../assests/images/profile.jpg";
 import testimage from "../../assests/images/classroomtest.jpg";
+import studentService from "../../services/student.service";
 
 function THome() {
+    const [postContent, setPostContent] = useState("");
+    const [selectedImages, setSelectedImages] = useState([]);
+    const [comment, setNewComment] = useState({});
+    const [category, setCategory] = useState("Education");
+    const [posts, setPosts] = useState([]);
 
-  const [posts, setPosts] = useState([
-    {
-      username: "John Doe",
-      date: "May 1, 2025",
-      content: "Excited to start the new course! 📘",
-      image: testimage,
-      showCommentBox: false,
-      showShareBox: false,
-      comments: [],
-    },
-  ]);
+ useEffect(() =>{
+    //Fetch Posts
+    const fetchPosts = async () =>{
+    try {
+      const fetchPosts = await studentService.getAllPosts();
 
-  const [postContent, setPostContent] = useState("");
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [newComment, setNewComment] = useState({});
-
+      const transformedPosts = fetchPosts.map((post) => ({
+        id: post._id,
+        username: post.userId?.username || "Teacher",
+        date: new Date(post.createdAt).toDateString(),
+        content: post.content,
+        image: post.media[0] || null,
+        showCommentBox: false,
+        showShareBox: false,
+        comment: post.comment || [],
+        category: post.category === 1 ? "Education" : "General",
+      }));
+      setPosts(transformedPosts);
+    } catch (error) {
+      console.error("Error loading posts:", error.message);
+    }
+  }
+    fetchPosts();
+  },[])
   const handleContentChange = (e) => {
     setPostContent(e.currentTarget.innerHTML);
   };
@@ -44,23 +58,81 @@ function THome() {
     setPostContent(editor.innerHTML);
   };
 
-  const handlePost = () => {
-    if (postContent.trim()) {
-      const newPost = {
-        username: "Diduli",
-        date: new Date().toDateString(),
-        content: postContent,
-        image: selectedImages[0] || null,
-        showCommentBox: false,
-        showShareBox: false,
-        comments: [],
-      };
-      setPosts([newPost, ...posts]);
-      setPostContent("");
-      setSelectedImages([]);
-      document.getElementById("postEditor").innerHTML = "";
+  const handlePost = async () => {
+    if(!postContent.trim()) return;
+
+    try {
+     const formData = new FormData();
+
+     formData.append("content",postContent);
+     formData.append("category",category === "Education" ? 1: 2);
+
+     const fileInput = document.getElementById("imageUpload");
+     for(let i = 0; i < fileInput.files.length; i++){
+        formData.append("media",fileInput.files[i]);
+     }
+
+     const response =  await studentService.createPost(formData);
+     console.log("Post created", response);
+        const newPost = {
+          username: "",
+          date: new Date().toDateString(),
+          content: postContent,
+          image: selectedImages[0] || null,
+          showCommentBox: false,
+          showShareBox: false,
+          comment: [],
+          category: category,
+        };
+        setPosts([newPost, ...posts]);
+        setPostContent("");
+        setSelectedImages([]);
+        document.getElementById("postEditor").innerHTML = "";
+        fileInput.value = "";
+      
+    } catch (error) {
+      console.error("Error creating post", error.message);
+      alert(error.message)
     }
+
   };
+
+  const handleLike = async(postId) =>{
+    try {
+      await studentService.likeAndUnlike(postId);
+      alert('liked successfully');
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+const handleComment = async (index) => {
+    const commentText = comment[index];
+    console.log("Comment text to send:", commentText);
+    
+    if (!commentText || !commentText.trim()) {
+        alert("Comment cannot be empty!!");
+        return;
+    }
+
+    const postId = posts[index].id;
+    try {
+        console.log("Sending:", commentText.trim());
+        await studentService.addComment(postId, commentText.trim());
+
+        const updatedPosts = [...posts];
+        updatedPosts[index].comment.push({
+            user: "You",
+            text: commentText,
+        });
+        setPosts(updatedPosts);
+        setNewComment({ ...comment, [index]: "" });
+    } catch (error) {
+        console.error("Error details:", error);
+        alert(error.message);
+    }
+}
+
 
   const toggleCommentBox = (index) => {
     const updatedPosts = [...posts];
@@ -75,19 +147,19 @@ function THome() {
   };
 
   const handleCommentChange = (index, value) => {
-    setNewComment({ ...newComment, [index]: value });
+    setNewComment({ ...comment, [index]: value });
   };
 
   const handleCommentSubmit = (index) => {
-    if (!newComment[index]) return;
+    if (!comment[index]) return;
 
     const updatedPosts = [...posts];
     updatedPosts[index].comments.push({
       user: "You",
-      text: newComment[index],
+      text: comment[index],
     });
     setPosts(updatedPosts);
-    setNewComment({ ...newComment, [index]: "" });
+    setNewComment({ ...comment, [index]: "" });
   };
 
   return (
@@ -220,7 +292,7 @@ function THome() {
                       type="text"
                       placeholder="Write a comment..."
                       className="form-control form-control-sm mb-2"
-                      value={newComment[index] || ""}
+                      value={comment[index] || ""}
                       onChange={(e) => handleCommentChange(index, e.target.value)}
                     />
                     <button

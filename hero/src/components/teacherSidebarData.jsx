@@ -5,7 +5,7 @@ import MessageIcon from '@mui/icons-material/Message';
 import GroupIcon from '@mui/icons-material/Group';
 import EventIcon from '@mui/icons-material/Event';
 import ProfileIcon from '@mui/icons-material/Person';
-
+import LogoutIcon from '@mui/icons-material/Logout';
 export const TSidebarData = [
     {
         title: "Home",
@@ -36,5 +36,10 @@ export const TSidebarData = [
         title: "My Profile",
         icon: <ProfileIcon />,  // FIXED: Capitalized
         link: "/teacherProfile"
+    },
+      {
+        title: "Logout",
+        icon: <LogoutIcon />,  // FIXED: Capitalized
+        link: "/"
     }
 ];
