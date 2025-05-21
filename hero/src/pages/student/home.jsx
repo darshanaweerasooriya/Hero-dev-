@@ -12,30 +12,28 @@ import studentService from "../../services/student.service";
 function Home() {
   const [posts, setPosts] = useState([]);
 
-  useEffect(() =>{
-    const fetchPosts = async () =>{
-    try {
-      const fetchPosts = await studentService.getAllPosts();
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const fetchPosts = await studentService.getAllPosts();
 
-      const transformedPosts = fetchPosts.map((post) => ({
-        username: post.userId?.username || "Unknown",
-        date: new Date(post.createdAt).toDateString(),
-        content: post.content,
-        image: post.media[0] || null,
-        showCommentBox: false,
-        showShareBox: false,
-        comments: post.comments || [],
-        category: post.category === 1 ? "Education" : "General",
-      }));
-      setPosts(transformedPosts);
-    } catch (error) {
-      console.error("Error loading posts:", error.message);
-    }
-  }
+        const transformedPosts = fetchPosts.map((post) => ({
+          username: post.userId?.username || "Unknown",
+          date: new Date(post.createdAt).toDateString(),
+          content: post.content,
+          image: post.media[0] || null,
+          showCommentBox: false,
+          showShareBox: false,
+          comments: post.comments || [],
+          category: post.category === 1 ? "Education" : "General",
+        }));
+        setPosts(transformedPosts);
+      } catch (error) {
+        console.error("Error loading posts:", error.message);
+      }
+    };
     fetchPosts();
-  },[])
-  
-
+  }, []);
 
   const [postContent, setPostContent] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
@@ -54,7 +52,7 @@ function Home() {
 
     const editor = document.getElementById("postEditor");
     imageUrls.forEach((url) => {
-      const imgTag = `<img src="${url}" class="img-thumbnail me-2" style="width: 70px; height: 70px;" />`;
+      const imgTag = `<img src="${url}" class="img-thumbnail me-2 mb-2" style="width: 70px; height: 70px; object-fit: cover;" />`;
       editor.innerHTML += imgTag;
     });
 
@@ -62,42 +60,39 @@ function Home() {
   };
 
   const handlePost = async () => {
-    if(!postContent.trim()) return;
+    if (!postContent.trim()) return;
 
     try {
-     const formData = new FormData();
+      const formData = new FormData();
+      formData.append("content", postContent);
+      formData.append("category", category === "Education" ? 1 : 2);
 
-     formData.append("content",postContent);
-     formData.append("category",category === "Education" ? 1: 2);
+      const fileInput = document.getElementById("imageUpload");
+      for (let i = 0; i < fileInput.files.length; i++) {
+        formData.append("media", fileInput.files[i]);
+      }
 
-     const fileInput = document.getElementById("imageUpload");
-     for(let i = 0; i < fileInput.files.length; i++){
-        formData.append("media",fileInput.files[i]);
-     }
-
-     const response =  await studentService.createPost(formData);
-     console.log("Post created", response);
-        const newPost = {
-          username: "Diduli",
-          date: new Date().toDateString(),
-          content: postContent,
-          image: selectedImages[0] || null,
-          showCommentBox: false,
-          showShareBox: false,
-          comments: [],
-          category: category,
-        };
-        setPosts([newPost, ...posts]);
-        setPostContent("");
-        setSelectedImages([]);
-        document.getElementById("postEditor").innerHTML = "";
-        fileInput.value = "";
-      
+      const response = await studentService.createPost(formData);
+      console.log("Post created", response);
+      const newPost = {
+        username: "Diduli",
+        date: new Date().toDateString(),
+        content: postContent,
+        image: selectedImages[0] || null,
+        showCommentBox: false,
+        showShareBox: false,
+        comments: [],
+        category: category,
+      };
+      setPosts([newPost, ...posts]);
+      setPostContent("");
+      setSelectedImages([]);
+      document.getElementById("postEditor").innerHTML = "";
+      fileInput.value = "";
     } catch (error) {
       console.error("Error creating post", error.message);
-      alert(error.message)
+      alert(error.message);
     }
-
   };
 
   const toggleCommentBox = (index) => {
@@ -118,7 +113,6 @@ function Home() {
 
   const handleCommentSubmit = (index) => {
     if (!newComment[index]) return;
-
     const updatedPosts = [...posts];
     updatedPosts[index].comments.push({
       user: "You",
@@ -131,7 +125,7 @@ function Home() {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-8 leftcontainer p-3 mt-4">
+        <div className="col-12 col-md-8 leftcontainer p-3 mt-4">
           <h1 className="home">Home</h1>
 
           <div className="stories-container d-flex">
@@ -225,15 +219,15 @@ function Home() {
                     src={post.image}
                     alt="post"
                     className="img-fluid rounded mt-2"
-                    style={{ maxHeight: "400px", objectFit: "cover" }}
+                    style={{ maxHeight: "400px", width: "100%", objectFit: "cover" }}
                   />
                 )}
 
                 <hr />
-                <div className="d-flex justify-content-around text-muted">
-                  <button className="btn btn-light btn-sm w-100 me-1">👍 Like</button>
-                  <button className="btn btn-light btn-sm w-100 me-1" onClick={() => toggleCommentBox(index)}>💬 Comment</button>
-                  <button className="btn btn-light btn-sm w-100" onClick={() => toggleShareBox(index)}>↗️ Share</button>
+                <div className="d-flex justify-content-around text-muted flex-wrap">
+                  <button className="btn btn-light btn-sm w-100 me-1 mb-1">👍 Like</button>
+                  <button className="btn btn-light btn-sm w-100 me-1 mb-1" onClick={() => toggleCommentBox(index)}>💬 Comment</button>
+                  <button className="btn btn-light btn-sm w-100 mb-1" onClick={() => toggleShareBox(index)}>↗️ Share</button>
                 </div>
 
                 {post.showCommentBox && (
@@ -266,7 +260,7 @@ function Home() {
           ))}
         </div>
 
-        <div className="col-md-4 rightcontainer p-3 bg-light mt-4">
+        <div className="col-12 col-md-4 rightcontainer p-3 bg-light mt-4">
           <div className="input-group input-group-sm mb-3">
             <input type="text" className="form-control" placeholder="Search..." />
           </div>
