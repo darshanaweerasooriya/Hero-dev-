@@ -53,8 +53,8 @@ const studentService = {
         }
     },
 
- async getUserById() {
-    try {
+    async getUserById() {
+        try {
         const token = localStorage.getItem('token');
         const response = await api2.get('/', {
             headers: {
@@ -62,29 +62,71 @@ const studentService = {
             }
         });
         return response.data;
-    } catch (error) {
-        throw new Error(
-            error.response?.data?.message || 'Error getting user by id'
-        );
-    }
+        } catch (error) {
+            throw new Error(
+                error.response?.data?.message || 'Error getting user by id'
+            );
+        }
 },
 
- async getAllPosts() {
-    try {
+    async getAllPosts() {
+        try {
        
-        const response = await api.get('/getPost', {
+            const response = await api.get('/getPost', {
+        });
+        return response.data;
+        } catch (error) {
+            throw new Error(
+                error.response?.data?.message || 'Error getting user by id'
+            );
+        }
+    },
+
+    async likeAndUnlike(postId){  
+        try {
+            const token = localStorage.getItem('token');
+            const response = await api.post(`/${postId}/like`,{},{
+                headers:{
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+            return response.data;
+        } catch (error) {
+            throw new Error(
+                error.response?.data?.message || 'Error adding likes'
+            )
+        }
+    },
+
+   async addComment(postId,commentData) {  // Add commentData parameter
+    try {
+        const token = localStorage.getItem('token');
+        const response = await api.post(`/${postId}/comments`,commentData, { 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'text/plain'
+            },
         });
         return response.data;
     } catch (error) {
         throw new Error(
-            error.response?.data?.message || 'Error getting user by id'
-        );
+            error.response?.data?.message || 'Error adding comments'
+        )
     }
-}
+},
 
-    
-
-
+    async getAllUsers() {
+        try {
+       
+            const response = await api2.get('/getUsers', {
+        });
+        return response.data;
+        } catch (error) {
+            throw new Error(
+                error.response?.data?.message || 'Error getting user by id'
+            );
+        }
+    },
    
 };
 

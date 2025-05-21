@@ -1,11 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import './parentlogin.css';
 import passwordImg from '../../../assests/images/Password-Reset.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
+import parentService from "../../../services/parent.service";
 
 
-function pEmail() {  
+function PEmail() {  
+
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+     const [newPassword, setNewPassword] = useState("");
+    const navigate = useNavigate();
+    const location = useLocation();
+    const email = location.state?.email || "";
+
+    const handleSubmit = async (e) =>{
+        e.preventDefault();
+        setError("");
+        setMessage("");
+
+        try {
+            const result = await parentService.updatePassword({
+                email,
+                newPassword,
+            });
+            setMessage("Confirmation code sent to your email.");
+            setTimeout(() => navigate("/resetPassword"), 2000);
+        } catch (error) {
+            setError(error.message || "Something went wrong");
+        }
+    }
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
             <div className="container leftSide d-flex flex-column w-100 md-5 " style={{ flex: 1 }}>
@@ -13,21 +38,27 @@ function pEmail() {
                 <p className="mb-2 ms-4">let's Monitor your child with us</p> */}
 
                 <div className="d-flex flex-column ms-4 pt-5 mt-4"> 
-                    <div className="mt-5"><p>Enter your Email address</p></div>
+                    <div className="mt-5"><p>Enter you new password</p></div>
                 </div>
 
                 <div className="">
-                    <form className="sdetails ms-4">
-                        <div className="mb-2">
-                           <p>Your email has been confirmed clicked the continue button to change your password</p>
-                           
+                  <form className="sdetails ms-4" onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <input
+                                type="password"
+                                className="form-control w-75"
+                                placeholder="Enter email"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                required
+                            />
                         </div>
-                         <Link to="/resetPassword">
-                             <button type="submit" className="btn btn-primary btn-sm w-75 mt-3" 
-                             style={{ backgroundColor: "#648DDB", borderColor: "#648DDB", color: "white", width: 100 }}>
-                             Submit
-                             </button>
-                         </Link>
+                        <button type="submit" className="btn btn-primary btn-sm w-75 mt-3"
+                            style={{ backgroundColor: "#648DDB", borderColor: "#648DDB", color: "white", width: 100 }}>
+                            Submit
+                        </button>
+                        {error && <div className="text-danger mt-2">{error}</div>}
+                        {message && <div className="text-success mt-2">{message}</div>}
                     </form>
                 </div>
 
@@ -50,4 +81,4 @@ function pEmail() {
     );
 }
 
-export default pEmail;  
+export default PEmail;  

@@ -21,6 +21,22 @@ const gamificationService = {
             error.response?.data?.message || 'Error getting user by id'
         );
     }
+    },
+
+    async getGamificationForChild() {
+        try {
+        const token = localStorage.getItem('token');
+        const response = await api.get('/child/gamification', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(
+            error.response?.data?.message || 'Error getting user by id'
+        );
+    }
     }
 }
 

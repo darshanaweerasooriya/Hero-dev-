@@ -1,9 +1,29 @@
 import React, {useState, useEffect, useRef} from "react";
 import testimage from "../../assests/images/classroomtest.jpg"
+import teacherService from "../../services/teacher.service";
 
 
 function Tgruop() {
+   const [clubs, setClubs] = useState([]);
 
+     useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const fetchClubs = await teacherService.getAllClubs();
+
+        const fetchUploadedClubs = fetchClubs.map((post) =>({
+          clubName: post.clubName,
+          description: post.description,
+
+        }));
+        setClubs(fetchUploadedClubs);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
     return(
         <div className="container">
         <div className="row">
@@ -19,7 +39,8 @@ function Tgruop() {
 
   
             {/* Card Content */}
-            <div className="card">
+            {clubs.map((club, index) => (
+            <div className="card mb-3" key={index}>
               <div className="card-body position-relative">
                 <button
                   type="button"
@@ -37,24 +58,22 @@ function Tgruop() {
                 >
                   Delete
                 </button>
-  
+
                 <div className="d-flex align-items-center mt-3">
                   <img
                     src={testimage}
                     className="img-fluid custom-pimg ms-2"
-                    alt="testimage"
-                    style={{ cursor: "pointer", width: "100px", height: "100px" }}
+                    alt="group"
+                    style={{ cursor: "pointer", width: "100px", height: "100px", objectFit: "cover" }}
                   />
                   <div className="d-flex flex-column ms-3">
-                    <label className="mb-1">Group 01</label>
-                    <p className="mb-0">
-                      Group num1 aadldld dldlgl ldlrlfdld dlrlrle flgtlgtlt lgogkgeo
-                      fek fbpmpm dfbkmdpbg
-                    </p>
+                    <label className="mb-1 fw-bold">{club.clubName}</label>
+                    <p className="mb-0">{club.description}</p>
                   </div>
                 </div>
               </div>
             </div>
+          ))}
           </div>
   
           {/* Right Section (Smaller - 4 columns) */}

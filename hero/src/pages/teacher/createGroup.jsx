@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./createGroup.css"
 import teacherService from "../../services/teacher.service";
+import studentService from "../../services/student.service";
 
 function CreateGroup(){
  const [formData, setFormData] = useState({
@@ -13,7 +14,20 @@ function CreateGroup(){
  const [rules, setRules] = useState([""]);
 const [clubLogo, setClubLogo] = useState(null);
 const[mediaFiles, setMediaFiles] = useState([]);
+const[invitedMembers, setInvitedMembers] = useState([]);
+const [students, setStudents] = useState([]);
 
+useEffect(() =>{
+  const fetchStudents = async () =>{
+    try {
+      const users = await studentService.getAllUsers();
+      setStudents(users);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  }
+  fetchStudents();
+},[]);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -32,6 +46,14 @@ const[mediaFiles, setMediaFiles] = useState([]);
     setRules([...rules, ""]);
   };
 
+  const toggleInvite = (studentId) => {
+    setInvitedMembers((prev) =>
+      prev.includes(studentId)
+        ? prev.filter((id) => id !== studentId)
+        : [...prev, studentId]
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -43,7 +65,7 @@ const[mediaFiles, setMediaFiles] = useState([]);
        mediaFiles.forEach((file) =>{
           data.append("clubLogo", file);
         });
-
+      data.append("invitedMembers",JSON.stringify(invitedMembers));
       const response = await teacherService.createClubs(data);
       console.log(response);
       alert("Club created successfully!");
@@ -121,20 +143,30 @@ const[mediaFiles, setMediaFiles] = useState([]);
                 </div>
                 <div>
                   <p className="fw-bold">Suggested</p>
-                  {[1, 2, 3].map((_, index) => (
-                    <div key={index} className="d-flex align-items-center justify-content-between mb-3">
-                      <div className="d-flex align-items-center">
-                        <img
-                          src="https://via.placeholder.com/40"
-                          alt="profile"
-                          className="rounded-circle me-2"
-                          style={{ width: "40px", height: "40px" }}
-                        />
-                        <span><strong>Diduli</strong></span>
-                      </div>
-                      <button type="button" className="btn btn-primary">Invite</button>
-                    </div>
-                  ))}
+                  {students.map((student) => {
+                    const isInvited = invitedMembers.includes(student._id); ;
+                  return (
+                    <div key={student.id} className="d-flex align-items-center justify-content-between mb-3">
+                    <div className="d-flex align-items-center">
+                     <img
+                        src="https://via.placeholder.com/40"
+                        alt="profile"
+                        className="rounded-circle me-2"
+                        style={{ width: "40px", height: "40px" }}
+                      />
+        <span><strong>{student.username}</strong></span>
+      </div>
+      <button
+        type="button"
+        className={`btn ${isInvited ? 'btn-danger' : 'btn-primary'}`}
+        onClick={() => toggleInvite(student._id)}
+      >
+        {isInvited ? "Remove" : "Invite"}
+      </button>
+    </div>
+  );
+})}
+
                 </div>
                 <div className="text-center">
                  
