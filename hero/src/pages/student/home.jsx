@@ -6,42 +6,37 @@ import myimage from "../../assests/images/welcome.png";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import FilterIcon from "@mui/icons-material/Filter1";
 import profile from "../../assests/images/profile.jpg";
-import testimage from "../../assests/images/classroomtest.jpg";
 import studentService from "../../services/student.service";
 
 function Home() {
   const [postContent, setPostContent] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
-  const [comment, setNewComment] = useState({});
+  const [commentsInput, setCommentsInput] = useState({});
   const [category, setCategory] = useState("Education");
   const [posts, setPosts] = useState([]);
 
-  useEffect(() =>{
-    //Fetch Posts
-    const fetchPosts = async () =>{
-    try {
-      const fetchPosts = await studentService.getAllPosts();
-
-      const transformedPosts = fetchPosts.map((post) => ({
-        id: post._id,
-        username: post.userId?.username || "Unknown",
-        date: new Date(post.createdAt).toDateString(),
-        content: post.content,
-        image: post.media[0] || null,
-        showCommentBox: false,
-        showShareBox: false,
-        comment: post.comment || [],
-        category: post.category === 1 ? "Education" : "General",
-      }));
-      setPosts(transformedPosts);
-    } catch (error) {
-      console.error("Error loading posts:", error.message);
-    }
-  }
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const fetchPosts = await studentService.getAllPosts();
+        const transformedPosts = fetchPosts.map((post) => ({
+          id: post._id,
+          username: post.userId?.username || "Unknown",
+          date: new Date(post.createdAt).toDateString(),
+          content: post.content,
+          image: post.media[0] || null,
+          showCommentBox: false,
+          showShareBox: false,
+          comments: post.comments || [],
+          category: post.category === 1 ? "Education" : "General",
+        }));
+        setPosts(transformedPosts);
+      } catch (error) {
+        console.error("Error loading posts:", error.message);
+      }
+    };
     fetchPosts();
-  },[])
-  
-
+  }, []);
 
   const handleContentChange = (e) => {
     setPostContent(e.currentTarget.innerHTML);
@@ -50,12 +45,11 @@ function Home() {
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
-
     setSelectedImages([...selectedImages, ...imageUrls]);
 
     const editor = document.getElementById("postEditor");
     imageUrls.forEach((url) => {
-      const imgTag = `<img src="${url}" class="img-thumbnail me-2" style="width: 70px; height: 70px;" />`;
+      const imgTag = `<img src="${url}" class="img-thumbnail me-2 mb-2" style="width: 70px; height: 70px; object-fit: cover;" />`;
       editor.innerHTML += imgTag;
     });
 
@@ -63,79 +57,76 @@ function Home() {
   };
 
   const handlePost = async () => {
-    if(!postContent.trim()) return;
+    if (!postContent.trim()) return;
 
     try {
-     const formData = new FormData();
+      const formData = new FormData();
+      formData.append("content", postContent);
+      formData.append("category", category === "Education" ? 1 : 2);
 
-     formData.append("content",postContent);
-     formData.append("category",category === "Education" ? 1: 2);
+      const fileInput = document.getElementById("imageUpload");
+      for (let i = 0; i < fileInput.files.length; i++) {
+        formData.append("media", fileInput.files[i]);
+      }
 
-     const fileInput = document.getElementById("imageUpload");
-     for(let i = 0; i < fileInput.files.length; i++){
-        formData.append("media",fileInput.files[i]);
-     }
+      const response = await studentService.createPost(formData);
+      console.log("Post created", response);
 
-     const response =  await studentService.createPost(formData);
-     console.log("Post created", response);
-        const newPost = {
-          username: "Diduli",
-          date: new Date().toDateString(),
-          content: postContent,
-          image: selectedImages[0] || null,
-          showCommentBox: false,
-          showShareBox: false,
-          comment: [],
-          category: category,
-        };
-        setPosts([newPost, ...posts]);
-        setPostContent("");
-        setSelectedImages([]);
-        document.getElementById("postEditor").innerHTML = "";
-        fileInput.value = "";
-      
+      const newPost = {
+        id: response._id,
+        username: "Diduli", // Ideally get current user
+        date: new Date().toDateString(),
+        content: postContent,
+        image: selectedImages[0] || null,
+        showCommentBox: false,
+        showShareBox: false,
+        comments: [],
+        category,
+      };
+
+      setPosts([newPost, ...posts]);
+      setPostContent("");
+      setSelectedImages([]);
+      document.getElementById("postEditor").innerHTML = "";
+      fileInput.value = "";
     } catch (error) {
       console.error("Error creating post", error.message);
-      alert(error.message)
+      alert(error.message);
     }
-
   };
 
-  const handleLike = async(postId) =>{
+  const handleLike = async (postId) => {
     try {
       await studentService.likeAndUnlike(postId);
-      alert('liked successfully');
+      alert("Liked successfully");
     } catch (error) {
       alert(error.message);
     }
-  }
+  };
 
-const handleComment = async (index) => {
-    const commentText = comment[index];
-    console.log("Comment text to send:", commentText);
-    
+  const handleComment = async (index) => {
+    const commentText = commentsInput[index];
     if (!commentText || !commentText.trim()) {
-        alert("Comment cannot be empty!!");
-        return;
+      alert("Comment cannot be empty!!");
+      return;
     }
 
     const postId = posts[index].id;
     try {
-        console.log("Sending:", commentText.trim());
-        await studentService.addComment(postId, commentText.trim());
+      await studentService.addComment(postId, commentText.trim());
 
-        const updatedPosts = [...posts];
-        updatedPosts[index].comment.push({
-            user: "You",
-            text: commentText,
-        });
-        setPosts(updatedPosts);
-        setNewComment({ ...comment, [index]: "" });
+      const updatedPosts = [...posts];
+      updatedPosts[index].comments.push({
+        user: "You",
+        text: commentText,
+      });
+      setPosts(updatedPosts);
+      setCommentsInput({ ...commentsInput, [index]: "" });
     } catch (error) {
-        console.error("Error details:", error);
-        alert(error.message);
+      console.error("Error details:", error);
+      alert(error.message);
     }
-}
+  };
 
   const toggleCommentBox = (index) => {
     const updatedPosts = [...posts];
@@ -150,31 +141,19 @@ const handleComment = async (index) => {
   };
 
   const handleCommentChange = (index, value) => {
-    setNewComment({ ...comment, [index]: value });
-  };
-
-  const handleCommentSubmit = (index) => {
-    if (!comment[index]) return;
-
-    const updatedPosts = [...posts];
-    updatedPosts[index].comment.push({
-      user: "You",
-      text: comment[index],
-    });
-    setPosts(updatedPosts);
-    setNewComment({ ...comment, [index]: "" });
+    setCommentsInput({ ...commentsInput, [index]: value });
   };
 
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-8 leftcontainer p-3 mt-4">
+        <div className="col-12 col-md-8 leftcontainer p-3 mt-4">
           <h1 className="home">Home</h1>
 
           <div className="stories-container d-flex">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="card ms-2 pt-2" style={{ width: "7rem", height: "9rem" }}>
-                <img src={myimage} className="card-img-top" alt="..." />
+                <img src={myimage} className="card-img-top" alt="story" />
               </div>
             ))}
           </div>
@@ -254,68 +233,52 @@ const handleComment = async (index) => {
                   </div>
                 </div>
 
-                <span className={`badge ${post.category === "Education" ? "bg-primary" : "bg-success"} mt-2`}>{post.category}</span>
+                <span className={`badge ${post.category === "Education" ? "bg-primary" : "bg-success"} mt-2`}>
+                  {post.category}
+                </span>
 
                 <div className="mt-2" dangerouslySetInnerHTML={{ __html: post.content }} />
                 {post.image && (
                   <img
                     src={post.image}
-                    alt="post"
+                    alt="Post"
                     className="img-fluid rounded mt-2"
-                    style={{ maxHeight: "400px", objectFit: "cover" }}
+                    style={{ maxHeight: "300px" }}
                   />
                 )}
 
-                <hr />
-                <div className="d-flex justify-content-around text-muted">
-                  <button className="btn btn-light btn-sm w-100 me-1" onClick={() => handleLike(post.id)}>👍 Like</button>
-                  <button className="btn btn-light btn-sm w-100 me-1" onClick={() => toggleCommentBox(index)}>💬 Comment</button>
-                  <button className="btn btn-light btn-sm w-100" onClick={() => toggleShareBox(index)}>↗️ Share</button>
+                <div className="mt-2 d-flex gap-2">
+                  <button className="btn btn-outline-primary btn-sm" onClick={() => handleLike(post.id)}>Like</button>
+                  <button className="btn btn-outline-secondary btn-sm" onClick={() => toggleCommentBox(index)}>Comment</button>
+                  <button className="btn btn-outline-info btn-sm" onClick={() => toggleShareBox(index)}>Share</button>
                 </div>
 
                 {post.showCommentBox && (
-                  <div className="mt-3">
+                  <div className="mt-2">
                     <input
                       type="text"
+                      className="form-control mb-1"
                       placeholder="Write a comment..."
-                      className="form-control form-control-sm mb-2"
-                      value={comment[index] || ""}
+                      value={commentsInput[index] || ""}
                       onChange={(e) => handleCommentChange(index, e.target.value)}
                     />
-                    <button className="btn btn-primary btn-sm" onClick={() => handleComment(index)}>Post Comment</button>
-                    <ul className="list-unstyled mt-2">
-                      {post.comment.map((c, i) => (
-                        <li key={i}><strong>{c.user}: </strong> {c.text}</li>
-                      ))}
-                    </ul>
+                    <button className="btn btn-sm btn-success" onClick={() => handleComment(index)}>Post Comment</button>
                   </div>
                 )}
 
-                {post.showShareBox && (
-                  <div className="mt-3 border p-2 bg-light rounded">
-                    <p className="mb-1 fw-bold">Share this post</p>
-                    <input type="text" className="form-control form-control-sm mb-2" placeholder="Say something about this..." />
-                    <button className="btn btn-success btn-sm">Share Now</button>
+                {post.comments && post.comments.length > 0 && (
+                  <div className="mt-2">
+                    <p className="fw-bold">Comments:</p>
+                    {post.comments.map((c, idx) => (
+                      <div key={idx} className="border-bottom pb-1 mb-1">
+                        <strong>{c.user}</strong>: {c.text}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="col-md-4 rightcontainer p-3 bg-light mt-4">
-          <div className="input-group input-group-sm mb-3">
-            <input type="text" className="form-control" placeholder="Search..." />
-          </div>
-
-          <div className="mt-2 d-flex justify-content-between align-items-center mb-2">
-            <label>Suggestions</label>
-            <label>See all</label>
-          </div>
-
-          <div>
-            <img src={testimage} className="card-img-top" alt="..." />
-          </div>
         </div>
       </div>
     </div>
