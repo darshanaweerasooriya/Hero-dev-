@@ -33,7 +33,7 @@ function Ssignup() {
                 console.log(res);
             } catch (err) {
                 console.error(err);
-                alert("Failed to add teacher");
+                alert("Failed to add Stdudent");
             }
         };
 

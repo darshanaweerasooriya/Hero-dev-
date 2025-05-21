@@ -74,7 +74,7 @@ function Home() {
 
       const newPost = {
         id: response._id,
-        username: "Diduli", // Ideally get current user
+        username: "", // Ideally get current user
         date: new Date().toDateString(),
         content: postContent,
         image: selectedImages[0] || null,
@@ -247,10 +247,22 @@ function Home() {
                   />
                 )}
 
-                <div className="mt-2 d-flex gap-2">
-                  <button className="btn btn-outline-primary btn-sm" onClick={() => handleLike(post.id)}>Like</button>
-                  <button className="btn btn-outline-secondary btn-sm" onClick={() => toggleCommentBox(index)}>Comment</button>
-                  <button className="btn btn-outline-info btn-sm" onClick={() => toggleShareBox(index)}>Share</button>
+                       <div className="d-flex justify-content-around text-muted">
+                  <button className="btn btn-light btn-sm w-100 me-1">
+                    👍 Like
+                  </button>
+                  <button
+                    className="btn btn-light btn-sm w-100 me-1"
+                    onClick={() => toggleCommentBox(index)}
+                  >
+                    💬 Comment
+                  </button>
+                  <button
+                    className="btn btn-light btn-sm w-100"
+                    onClick={() => toggleShareBox(index)}
+                  >
+                    ↗️ Share
+                  </button>
                 </div>
 
                 {post.showCommentBox && (
