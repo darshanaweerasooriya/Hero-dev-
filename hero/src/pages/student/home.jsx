@@ -29,6 +29,8 @@ function Home() {
           showShareBox: false,
           comments: post.comments || [],
           category: post.category === 1 ? "Education" : "General",
+          likes: post.likes?.length || 0, // Add this
+          liked: post.likes?.some((like) => like.userId === "CURRENT_USER_ID"),
         }));
         setPosts(transformedPosts);
       } catch (error) {
@@ -95,14 +97,28 @@ function Home() {
     }
   };
 
-  const handleLike = async (postId) => {
-    try {
-      await studentService.likeAndUnlike(postId);
-      alert("Liked successfully");
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+const handleLike = async (postId) => {
+  try {
+    await studentService.likeAndUnlike(postId);
+
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId) {
+        const isLiked = post.liked;
+        return {
+          ...post,
+          liked: !isLiked,
+          likes: isLiked ? post.likes - 1 : post.likes + 1,
+        };
+      }
+      return post;
+    });
+
+    setPosts(updatedPosts);
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
 
   const handleComment = async (index) => {
     const commentText = commentsInput[index];
@@ -248,9 +264,10 @@ function Home() {
                 )}
 
                        <div className="d-flex justify-content-around text-muted">
-                  <button className="btn btn-light btn-sm w-100 me-1">
-                    👍 Like
+                  <button className="btn btn-light btn-sm w-100 me-1"  onClick={() => handleLike(post.id)}>
+                    👍 Like ({post.likes} {post.likes === 1 ? 'like' : 'likes'})
                   </button>
+                  
                   <button
                     className="btn btn-light btn-sm w-100 me-1"
                     onClick={() => toggleCommentBox(index)}
