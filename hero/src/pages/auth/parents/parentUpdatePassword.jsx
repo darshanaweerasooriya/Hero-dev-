@@ -24,7 +24,7 @@ function ReserPassword() {
                 email,
                 newPassword,
             });
-            setMessage("Confirmation code sent to your email.");
+            setMessage("Successfully created the password!");
             setTimeout(() => navigate("/loginParent"), 2000);
         } catch (error) {
             setError(error.message || "Something went wrong");

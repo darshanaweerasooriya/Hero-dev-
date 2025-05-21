@@ -63,7 +63,7 @@ const handleSubmit = async (e) => {
                 <p className="mb-2 ms-4">let's Monitor your child with us</p> */}
 
                 <div className="d-flex flex-column ms-4 pt-5 mt-4"> 
-                    <div className="mt-5"><p>Enter your Email address</p></div>
+                    <div className="mt-5"><p>Enter your OTP</p></div>
                 </div>
 
                 <div className="">
