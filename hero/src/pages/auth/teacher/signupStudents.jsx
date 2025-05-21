@@ -8,33 +8,34 @@ import studentService from "../../../services/student.service";
 function Ssignup() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
+        fullName:'',
         username: '',
         password: '',
         level: '',
         gender: '',
-        mobile: ''
+        subject: '',
     });
     const [error, setError] = useState('');
 
-    const handleChange = (e) => {
-        const { name, value, id } = e.target;
-        setFormData({
-            ...formData,
-            [name || id]: value
-        });
-    };
+   const handleChange = (e) => {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
+        };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await studentService.loginStudent(formData);
-            console.log("Login successful", res);
-            navigate('/studentHome');
-        } catch (error) {
-            console.error(error);
-            setError(error.message || 'Login failed');
-        }
-    };
+            e.preventDefault();
+            try {
+                const preparedData = {
+                    ...formData,
+                    level: parseInt(formData.level,10)
+                };
+                const res = await studentService.registerStudent(preparedData);
+                alert("Stdudent added successfully!");
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+                alert("Failed to add teacher");
+            }
+        };
 
     return (
         <div className="row" style={{ display: "flex", height: "100vh" }}>
@@ -48,6 +49,16 @@ function Ssignup() {
 
                 <div className="">
                     <form className="sdetails ms-4" onSubmit={handleSubmit}>
+                         <div className="mb-2">
+                            <input
+                                type="text"
+                                name="fullName"
+                                placeholder="Enter your fullName"
+                                value={formData.fullName}
+                                onChange={handleChange}
+                                className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75"
+                            />
+                        </div>
                         <div className="mb-2">
                             <input
                                 type="text"
@@ -100,38 +111,22 @@ function Ssignup() {
                                 </select>
                             </div>
 
-                            <div className="col-md-4">
-                                <label>Password</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    className="form-control"
-                                    placeholder="Enter Password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                          
 
                            <div className="col-md-3 mb-3">
                             <label>Subject</label>
-                            <select
-                                name="level"
-                                className="form-select"
-                                value={formData.level}
+                            <input
+                                type="subject"
+                                name="subject"
+                                placeholder="Enter your subject"
+                                value={formData.subject}
                                 onChange={handleChange}
-                            >
-                                <option value="">Maths</option>
-                                <option value="3">Bio</option>
-                                <option value="2">Secondary</option>
-                                <option value="1">Advanced</option>
-                            </select>
+                                className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-100"
+                            />
                         </div>
 
                         </div>
 
-                        <div className="mb-2">
-                            <label className="small" htmlFor="exampleCheck1">Forgot Password?</label>
-                        </div>
 
                         <button
                             type="submit"
