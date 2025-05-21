@@ -94,6 +94,7 @@ function App() {
       <Route path="createEvent" element={<CreateEvent />}/>
       <Route path="createGroup" element={<CreateGroup />}/> 
       <Route path='tHome' element={<THome />} />
+      
 
       </Route>
         <Route path="perfomance" element={<performance />} />
@@ -126,7 +127,6 @@ function App() {
         <Route path="/pFrend" element={<Pfreinds />} />
         <Route path="/pReuest" element={<PRequest />}/>
         <Route path="adminLog" element={<AdminLog />}/>
-        
        
       </Routes>
     </Router>

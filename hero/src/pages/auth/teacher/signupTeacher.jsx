@@ -4,10 +4,12 @@ import myimage from '../../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
 import studentService from "../../../services/student.service";
+import adminService from "../../../services/admin.service";
 
 function TREg() {
      const navigate = useNavigate();
     const [formData, setFormData] = useState({
+        fullName: '',
         username: '',
         password: '',
         level: '',
@@ -16,23 +18,23 @@ function TREg() {
     });
     const [error, setError] = useState('');
 
-    const handleChange = (e) => {
-        const { name, value, id } = e.target;
-        setFormData({
-            ...formData,
-            [name || id]: value
-        });
+       const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await studentService.loginStudent(formData);
-            console.log("Login successful", res);
-            navigate('/studentHome');
-        } catch (error) {
-            console.error(error);
-            setError(error.message || 'Login failed');
+            const preparedData = {
+                ...formData,
+                level: parseInt(formData.level,10),
+            };
+            const res = await adminService.registerTeacher(preparedData);
+            alert("Teacher added successfully!");
+            console.log(res);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to add teacher");
         }
     };
 
@@ -51,9 +53,9 @@ function TREg() {
                         <div className="mb-2">
                             <input
                                 type="text"
-                                name="fullname"
+                                name="fullName"
                                 placeholder="Enter your fullname"
-                                value={formData.username}
+                                value={formData.fullName}
                                 onChange={handleChange}
                                 className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-75"
                             />
@@ -113,25 +115,19 @@ function TREg() {
                             
                             <div className="col-md-3 mb-3">
                             <label>Subjects</label>
-                            <select
-                                name="level"
-                                className="form-select"
-                                value={formData.level}
+                            <input
+                                type="subject"
+                                name="subject"
+                                placeholder="Enter your subject"
+                                value={formData.subject}
                                 onChange={handleChange}
-                            >
-                                <option value="">Select Level</option>
-                                <option value="3">Primary</option>
-                                <option value="2">Secondary</option>
-                                <option value="1">Advanced</option>
-                            </select>
+                                className="bg-transparent border-b border-gray-500 py-2 px-1 text-white text-lg focus:outline-none focus:border-purple-400 w-100"
+                            />
                         </div>
 
                             
                         </div>
 
-                        <div className="mb-2">
-                            <label className="small" htmlFor="exampleCheck1">Forgot Password?</label>
-                        </div>
 
                         <button
                             type="submit"

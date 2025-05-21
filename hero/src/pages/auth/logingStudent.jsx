@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './welcome.css';
 import myimage from '../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import studentService from "../../services/student.service";
 
 
@@ -66,7 +66,9 @@ function SLoging() {
         <button type="submit" className="btn btn-primary btn-sm w-75 mt-3" style={{ backgroundColor: "#D27EEF", borderColor: "#D27EEF", color: "white", width: 100 }}>Submit</button>
     </form>
     </div>
-
+               <div className="mb-2 mt-5 ms-4" >
+                Don’t have an account?  <Link to="/signupStudent"> Sign up</Link>
+                </div>
 
          </div>
         

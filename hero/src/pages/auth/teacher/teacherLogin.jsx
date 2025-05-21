@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './teacherLogin.css';
 import myimage from '../../../assests/images/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import adminService from "../../../services/admin.service";
 
 
@@ -75,7 +75,12 @@ function TeacherLoging() {
                         </button>
                     </form>
                 </div>
+                      <div className="mb-2 mt-5 ms-4" >
+                Don’t have an account?  <Link to="/signupTeacher"> Sign up</Link>
+                </div>
             </div>
+
+       
 
             <div className="container rightSide d-flex flex-column" style={{ flex: 1, height: "100vh" }}>
                 <h1 style={{ color: "white", fontSize: "10vh", fontWeight: "bold" }} className="mt-2">
