@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Welcome from './pages/auth/welcome';
+
 import StudentLoging from "./pages/auth/logingStudent";
 import StudentSignup from "./pages/auth/teacher/signupStudents"
 import TeacherLoging from "./pages/auth/teacher/teacherLogin"; 
@@ -61,8 +61,8 @@ function App() {
     <Router>
      
       <Routes>
-        <Route path="/" element={<Welcome />} />
-        <Route path="loginStudent" element={<StudentLoging />} />
+        {/* <Route path="/" element={<Welcome />} /> */}
+        <Route path="/" element={<StudentLoging />} />
         <Route path='signupStudent' element={<StudentSignup />}/>
         <Route path="loginTeachers" element={<TeacherLoging />} />
         <Route path='signupTeacher' element={<TeacherSignup />}/>
