@@ -28,6 +28,7 @@ import Sgroup from "./pages/student/studentsGroup"
 import MedalsPoints from "./pages/student/medalsPoints"
 import StudentsEvent from "./pages/student/events"
 import SgroupDetetails from "./pages/student/sGroupDetails"
+import Event from "./pages/student/eventDetail"
 
 import Tlayout from "./layouts/teacherLayout"
 import Teacherprofile from "./pages/teacher/teacherProfile"
@@ -83,6 +84,7 @@ function App() {
         <Route path="meadlPoints" element={<MedalsPoints />}/>
         <Route path="studentsEvent" element={<StudentsEvent />}/>
         <Route path="stduentGDetails" element={<SgroupDetetails/>} />
+        <Route path="sEvent" element={<Event />}/>
         
       </Route>
       <Route path ="/" element={<Tlayout />}>
