@@ -5,6 +5,7 @@ import teacherService from "../../services/teacher.service";
 
 function Sevent() {
   const [events, setEvents] = useState([]);
+   const navigate = useNavigate();
 
 
 
