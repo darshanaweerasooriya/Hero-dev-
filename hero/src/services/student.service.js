@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:3001/api/postCollections",
+    baseURL: "http://34.47.237.4:3001/api/postCollections",
   
 });
 
 const api2 = axios.create({
-    baseURL: "http://localhost:3001/api/users",
+    baseURL: "http://34.47.237.4:3001/api/users",
 })
 const studentService = {
 
