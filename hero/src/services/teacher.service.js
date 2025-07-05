@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:3001",
+    baseURL: "http://34.47.237.4:3001",
   
 })
 const teacherService = {

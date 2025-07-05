@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:3001/api/parent",
+    baseURL: "http://34.47.237.4:3001/api/parent",
   
 });
 
 const api2 = axios.create({
-    baseURL: "http://localhost:3001/api/auth",
+    baseURL: "http://34.47.237.4:3001/api/auth",
   
 });
 
