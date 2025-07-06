@@ -1,0 +1,31 @@
+# Ignore node_modules from both root and hero directory
+node_modules
+hero/node_modules
+
+# Ignore build artifacts if generated
+build
+dist
+hero/build
+hero/dist
+
+# Ignore logs
+*.log
+logs
+
+# Ignore system and IDE files
+.DS_Store
+.vscode
+.idea
+
+# Ignore environment variables (optional - secure them outside the image)
+.env
+.env.*
+
+# Ignore git & Docker metadata files
+.git
+.gitignore
+.dockerignore
+
+# Optional: ignore test coverage
+coverage
+hero/coverage
