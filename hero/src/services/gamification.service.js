@@ -36,7 +36,7 @@ const gamificationService = {
         throw new Error(
             error.response?.data?.message || 'Error getting user by id'
         );
-    }
+    } // test
     }
 }
 
